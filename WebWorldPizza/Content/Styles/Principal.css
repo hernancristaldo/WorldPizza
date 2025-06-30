@@ -1,0 +1,49 @@
+﻿.principal {
+    box-shadow: 5px 5px 5px 0px #6462620a;
+    background: white;
+    max-width: 1400px
+}
+
+.principal-content {
+    padding: 0 0 10px 0;
+}
+
+.principal-subtitulo {
+    padding-bottom: 30px;
+}
+
+.principal-filtros {
+    text-align: center;
+}
+
+    .principal-filtros .form-row {
+        place-content: center;
+        padding-top: 20px;
+    }
+
+.principal-header {
+    text-align: center;
+    padding-bottom: 0px;
+    padding-top: 20px;
+    background-color: steelblue;
+    color: white;
+}
+
+.custom-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px 20px 20px 30px;
+    font-size: large;
+}
+
+.principal-body {
+    margin: 10px;
+    padding: 20px;
+    background-color: #fbfbfe;
+    border: 1px solid lightgrey;
+}
+
+.principal-spinner {
+    display: flex;
+    justify-content: center;
+}

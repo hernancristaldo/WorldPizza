@@ -1,0 +1,132 @@
+﻿.custom-btn-guardar {
+    gap: 5px;
+    font-size: 1em;
+    padding: 15px;
+    font-weight: 500;
+    background-color: white;
+    color: var(--primary-color);
+    cursor: pointer;
+    text-align: center;
+    margin: 20px 0;
+    border-radius: 30px;
+    border: 1px solid var(--primary-color);
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+    .custom-btn-guardar:hover {
+        background-color: var(--primary-color);
+        color: white;
+        border: 1px solid var(--primary-color);
+    }
+
+.custom-btn-guardar-small {
+    background-color: var(--primary-color);
+    width: 100%;
+    height: 100%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 30px;
+}
+
+    .custom-btn-guardar-small:hover {
+        background-color: var(--secondary-color);
+    }
+
+.custom-btn-sumar {
+    font-size: 3em;
+    border-radius: 0px 5px 5px 0px;
+    padding: 3px;
+    border: none;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    width: 70px;
+    text-align: center;
+}
+
+    .custom-btn-sumar:hover {
+        background-color: var(--secondary-color);
+    }
+
+.custom-btn-auto {
+    width: 100%;
+    margin: 15px 0;
+    background-color: white;
+    color: darkslategrey;
+    font-size: 1.2em;
+    font-weight: 500;
+    border: 1px solid silver;
+    transition: background-color 0.5s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 13px;
+    border-radius: 5px;
+}
+
+    .custom-btn-auto:hover {
+        cursor: pointer;
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .custom-btn-auto:disabled {
+        background-color: lightslategrey;
+        cursor: auto;
+        border: none;
+        color: white;
+    }
+
+.custom-btn-auto-small {
+    font-size: 1em;
+    border-radius: 5px;
+    padding: 10px;
+    border: none;
+    font-weight: 500;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    height: 40px;
+}
+
+    .custom-btn-auto-small:hover {
+        background-color: var(--secondary-color);
+    }
+
+    .custom-btn-auto-small:disabled {
+        background-color: lightslategrey;
+        cursor: auto;
+    }
+
+.btn-link {
+    display: inline-block;
+    cursor: pointer;
+    align-items: center;
+    padding: 15px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+    .btn-link a {
+        display: inline-block;
+        color: black;
+        text-decoration: underline;
+        text-decoration-color: var(--primary-color); /* Color del subrayado */
+    }
+
+    .btn-link:hover {
+        background: var(--primary-color);
+        border-radius: 5px 5px 0px 0px;
+    }
+
+        .btn-link:hover a {
+            color: white;
+            text-decoration: none; /* Elimina el subrayado al hacer hover */
+        }

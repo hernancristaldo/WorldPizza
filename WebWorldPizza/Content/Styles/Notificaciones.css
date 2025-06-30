@@ -1,0 +1,111 @@
+﻿/*CAMPANITA DE NOTIFICACIONES*/
+.contenedor-iconos {
+    display: flex;
+    align-items: flex-end;
+}
+
+.contenedor-alerta {
+    display: flex;
+    align-items: flex-start;
+}
+
+.item-notificacion {
+    background-color: red;
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-family: 'Inter';
+    display: flex;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    align-items: center;
+    transform: translate(10px, 12px);
+}
+
+.contenedor-notificaciones {
+    max-height: 200px;
+    max-width: 300px;
+    overflow: hidden;
+    outline: none;
+    width: 250px;
+    font-size: 10px;
+    border: 1px solid #a4a0a0;
+    z-index: 999;
+    position: absolute;
+    color: black;
+    transform: translate(-235px, 2px);
+    overflow-y: auto;
+    border-radius: 2px;
+}
+
+.link-gestion {
+    background-color: #d5f0fa;
+    margin: 0px;
+    color: #242323;
+    overflow: hidden;
+    height: 25px;
+    font-size: 10px;
+    font-family: 'Inter';
+    padding: 5px;
+    border: solid 1px white;
+}
+
+    .link-gestion:hover {
+        background-color: #b6e3f3;
+    }
+
+.link-gestion-visto {
+    background-color: white;
+    margin: 0px;
+    color: #242323;
+    overflow: hidden;
+    height: 25px;
+    font-size: 10px;
+    font-family: 'Inter';
+    padding: 5px;
+    border: solid 1px white;
+}
+
+    .link-gestion-visto:hover {
+        background-color: #f1f0f0;
+    }
+
+.encabezado-contenedor {
+    font-family: 'Inter';
+    font-size: 12px;
+    margin: 0px;
+    padding: 7px;
+    background-color: #EAEDF1;
+    border-bottom: 1px solid #a4a0a0;
+}
+
+
+/*TILDES TABLA*/
+.cargado {
+    color: dimgray;
+}
+
+.visto {
+    color: lime;
+}
+
+.allVisto {
+    color: deepskyblue;
+}
+
+.contenedor-empleados {
+    max-height: 200px;
+    max-width: 200px;
+    overflow: hidden;
+    outline: none;
+    width: max-content;
+    font-size: 10px;
+    border: 1px solid #a4a0a0;
+    z-index: 999;
+    position: absolute;
+    color: black;
+    transform: translate(-83px, -10px);
+    overflow-y: auto;
+    border-radius: 10px 0px 10px 10px;
+}

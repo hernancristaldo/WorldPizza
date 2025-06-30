@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="bc77a9fc-d03e-476f-bc36-202d1af3e5c2" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:51523/ServiceWorldPizza.svc" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ServiceWorldPizza.xsd" MetadataType="Schema" ID="a69cf38b-c3fb-4356-8b90-a2966772b5b6" SourceId="1" SourceUrl="http://localhost:51523/ServiceWorldPizza.svc?xsd=xsd2" />
+    <MetadataFile FileName="ServiceWorldPizza.disco" MetadataType="Disco" ID="f6a04c81-37b5-4305-ad9f-a685494878d7" SourceId="1" SourceUrl="http://localhost:51523/ServiceWorldPizza.svc?disco" />
+    <MetadataFile FileName="ServiceWorldPizza.wsdl" MetadataType="Wsdl" ID="d1785030-1f37-4e81-a8f6-439e40f51490" SourceId="1" SourceUrl="http://localhost:51523/ServiceWorldPizza.svc?wsdl" />
+    <MetadataFile FileName="ServiceWorldPizza1.xsd" MetadataType="Schema" ID="148b64e3-f602-4ed8-9b01-3e89515a3ddc" SourceId="1" SourceUrl="http://localhost:51523/ServiceWorldPizza.svc?xsd=xsd1" />
+    <MetadataFile FileName="ServiceWorldPizza2.xsd" MetadataType="Schema" ID="98e64b71-e14f-422c-9a99-c2c94ba49771" SourceId="1" SourceUrl="http://localhost:51523/ServiceWorldPizza.svc?xsd=xsd0" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

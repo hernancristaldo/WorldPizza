@@ -1,0 +1,129 @@
+﻿/* Modal */
+.custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.custom-modal-content {
+    background-color: #fefefe;
+    margin: 7% auto;
+    width: 80%;
+    overflow: hidden;    
+}
+
+.custom-modal-content-small {
+    background-color: #fefefe;
+    margin: 7% auto;
+    width: 30%;
+    overflow: hidden;
+    max-width: 1100px;
+}
+
+.custom-modal-close-small {
+    float: right;
+    font-weight: bold;
+    padding: 0px 20px 0px 0px;
+    font-size: 3em;
+    color: #ccc;
+}
+
+    .custom-modal-close-small:hover,
+    .custom-modal-close-small:focus {
+        color: red;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.custom-modal-close {
+    float: right;
+    font-size: 3em;
+    font-weight: bold;
+    color: #ccc;
+    padding: 0px 20px 0px 0px;
+}
+
+    .custom-modal-close:hover,
+    .custom-modal-close:focus {
+        color: white;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.custom-modal-header-small {
+    min-height: 40px;
+}
+
+.custom-modal-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 20px 20px 20px 30px;
+    font-size: large;
+    min-height: 50px;
+    display: list-item;
+}
+
+    .custom-modal-header span {
+        color: white;
+    }
+
+.custom-modal-body {
+    background-color: white;
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out; 
+    padding: 20px;
+}
+
+.ocultar {
+    opacity: 0;
+}
+
+.modal-hidden {
+    opacity: 0;
+    transition: opacity 0.3s ease; 
+    pointer-events: none; 
+}
+
+/* spinner */
+.content-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3;
+    border-top: 8px solid #3498db;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    display: none;
+    margin: 50px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.spinner.show {
+    display: block;
+}
+
+@media screen and (max-width: 768px) {
+    .custom-modal-content-small {
+        width: 90%;
+    }
+}
