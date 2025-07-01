@@ -1,0 +1,10 @@
+# Normalizar finales de línea para evitar conflictos cross-platform
+* text=auto
+
+# Tratar archivos C# como texto
+*.cs diff=csharp
+
+# Forzar archivos específicos como texto
+*.sln text
+*.csproj text
+*.config text

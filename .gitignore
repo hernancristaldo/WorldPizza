@@ -1,0 +1,56 @@
+# Archivos de usuario de Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Archivos de configuración personal
+*.vspscc
+*.vssscc
+.vs/
+
+# Archivos de build
+bin/
+obj/
+[Bb]uild/
+[Bb]uild[Ll]og.*
+TestResults/
+out/
+
+# Archivos temporales
+*.tmp
+*.bak
+*.cache
+*.log
+
+# Archivos de paquetes
+*.nupkg
+*.snupkg
+packages/
+*.dll
+*.exe
+*.pdb
+
+# Configuraciones de depuración
+*.vshost.*
+*.dbmdl
+
+# Archivos de publicación
+.publish/
+**/PublishProfiles/
+
+# Archivos generados por Rider
+.idea/
+
+# Archivos de configuración global
+*.DotSettings.user
+
+# Archivos de sistema
+Thumbs.db
+Desktop.ini
+.BIN/
+
+# Archivos del sistema operativo
+.DS_Store
+ehthumbs.db
+Icon?
