@@ -11,7 +11,11 @@ namespace WebWorldPizza
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            var serv = new WSWorldPizza.ServiceWorldPizzaClient();
 
+            string msj = serv.bienvenida();
+
+            Console.WriteLine(msj);
         }
     }
 }
