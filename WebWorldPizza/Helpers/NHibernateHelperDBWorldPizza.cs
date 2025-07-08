@@ -1,8 +1,9 @@
 ﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
+using WebWorldPizza.WSWorldPizza;
 
-namespace WSWorldPizza.Helpers
+namespace WebWorldPizza.Helpers
 {
     public class NHibernateHelperDBWorldPizza
     {
@@ -19,7 +20,7 @@ namespace WSWorldPizza.Helpers
             }
         }
 
-        
+
         private static void InitializeSessionFactory()
         {
             _sessionFactory = Fluently.Configure()

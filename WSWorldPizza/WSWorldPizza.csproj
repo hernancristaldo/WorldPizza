@@ -203,6 +203,8 @@
     <Compile Include="Helpers\CustomMsSqlDialect .cs" />
     <Compile Include="Helpers\NHibernateHelperDBWorldPizza.cs" />
     <Compile Include="IServiceWorldPizza.cs" />
+    <Compile Include="Models\Errores.cs" />
+    <Compile Include="Models\Resultado.cs" />
     <Compile Include="Models\SomeError.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
