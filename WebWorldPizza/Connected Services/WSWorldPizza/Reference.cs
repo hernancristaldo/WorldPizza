@@ -9,65 +9,53 @@
 //------------------------------------------------------------------------------
 
 namespace WebWorldPizza.WSWorldPizza {
-    using System.Runtime.Serialization;
-    using System;
     
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Runtime.Serialization", "4.0.0.0")]
-    [System.Runtime.Serialization.DataContractAttribute(Name="SomeError", Namespace="http://schemas.datacontract.org/2004/07/WSWorldPizza.Models")]
-    [System.SerializableAttribute()]
-    public partial class SomeError : object, System.Runtime.Serialization.IExtensibleDataObject, System.ComponentModel.INotifyPropertyChanged {
-        
-        [System.NonSerializedAttribute()]
-        private System.Runtime.Serialization.ExtensionDataObject extensionDataField;
-        
-        [System.Runtime.Serialization.OptionalFieldAttribute()]
-        private string ContentField;
-        
-        [global::System.ComponentModel.BrowsableAttribute(false)]
-        public System.Runtime.Serialization.ExtensionDataObject ExtensionData {
-            get {
-                return this.extensionDataField;
-            }
-            set {
-                this.extensionDataField = value;
-            }
-        }
-        
-        [System.Runtime.Serialization.DataMemberAttribute()]
-        public string Content {
-            get {
-                return this.ContentField;
-            }
-            set {
-                if ((object.ReferenceEquals(this.ContentField, value) != true)) {
-                    this.ContentField = value;
-                    this.RaisePropertyChanged("Content");
-                }
-            }
-        }
-        
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        
-        protected void RaisePropertyChanged(string propertyName) {
-            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
-            if ((propertyChanged != null)) {
-                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-        }
-    }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="WSWorldPizza.IServiceWorldPizza")]
     public interface IServiceWorldPizza {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/bienvenida", ReplyAction="http://tempuri.org/IServiceWorldPizza/bienvenidaResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(WebWorldPizza.WSWorldPizza.SomeError), Action="http://tempuri.org/IServiceWorldPizza/bienvenidaSomeErrorFault", Name="SomeError", Namespace="http://schemas.datacontract.org/2004/07/WSWorldPizza.Models")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WSWorldPizza.Models.SomeError), Action="http://tempuri.org/IServiceWorldPizza/bienvenidaSomeErrorFault", Name="SomeError", Namespace="http://schemas.datacontract.org/2004/07/WSWorldPizza.Models")]
         string bienvenida();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/bienvenida", ReplyAction="http://tempuri.org/IServiceWorldPizza/bienvenidaResponse")]
         System.Threading.Tasks.Task<string> bienvenidaAsync();
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CMenusRoles", ReplyAction="http://tempuri.org/IServiceWorldPizza/CMenusRolesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WSWorldPizza.Models.SomeError), Action="http://tempuri.org/IServiceWorldPizza/CMenusRolesSomeErrorFault", Name="SomeError", Namespace="http://schemas.datacontract.org/2004/07/WSWorldPizza.Models")]
+        WSWorldPizza.Models.MenusRoles[] CMenusRoles(System.Nullable<int> id_menu, System.Nullable<int> id_rol);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CMenusRoles", ReplyAction="http://tempuri.org/IServiceWorldPizza/CMenusRolesResponse")]
+        System.Threading.Tasks.Task<WSWorldPizza.Models.MenusRoles[]> CMenusRolesAsync(System.Nullable<int> id_menu, System.Nullable<int> id_rol);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CUsuario", ReplyAction="http://tempuri.org/IServiceWorldPizza/CUsuarioResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WSWorldPizza.Models.SomeError), Action="http://tempuri.org/IServiceWorldPizza/CUsuarioSomeErrorFault", Name="SomeError", Namespace="http://schemas.datacontract.org/2004/07/WSWorldPizza.Models")]
+        WSWorldPizza.Models.Usuarios CUsuario(string nombreUsuario, System.Nullable<int> id_empleado);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CUsuario", ReplyAction="http://tempuri.org/IServiceWorldPizza/CUsuarioResponse")]
+        System.Threading.Tasks.Task<WSWorldPizza.Models.Usuarios> CUsuarioAsync(string nombreUsuario, System.Nullable<int> id_empleado);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CUsuarios", ReplyAction="http://tempuri.org/IServiceWorldPizza/CUsuariosResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WSWorldPizza.Models.SomeError), Action="http://tempuri.org/IServiceWorldPizza/CUsuariosSomeErrorFault", Name="SomeError", Namespace="http://schemas.datacontract.org/2004/07/WSWorldPizza.Models")]
+        WSWorldPizza.Models.Usuarios[] CUsuarios(string filtroBusqueda);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CUsuarios", ReplyAction="http://tempuri.org/IServiceWorldPizza/CUsuariosResponse")]
+        System.Threading.Tasks.Task<WSWorldPizza.Models.Usuarios[]> CUsuariosAsync(string filtroBusqueda);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CUsuarioRoles", ReplyAction="http://tempuri.org/IServiceWorldPizza/CUsuarioRolesResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WSWorldPizza.Models.SomeError), Action="http://tempuri.org/IServiceWorldPizza/CUsuarioRolesSomeErrorFault", Name="SomeError", Namespace="http://schemas.datacontract.org/2004/07/WSWorldPizza.Models")]
+        WSWorldPizza.Models.UsuariosRoles[] CUsuarioRoles(string usuario);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CUsuarioRoles", ReplyAction="http://tempuri.org/IServiceWorldPizza/CUsuarioRolesResponse")]
+        System.Threading.Tasks.Task<WSWorldPizza.Models.UsuariosRoles[]> CUsuarioRolesAsync(string usuario);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CUsuariosRol", ReplyAction="http://tempuri.org/IServiceWorldPizza/CUsuariosRolResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(WSWorldPizza.Models.SomeError), Action="http://tempuri.org/IServiceWorldPizza/CUsuariosRolSomeErrorFault", Name="SomeError", Namespace="http://schemas.datacontract.org/2004/07/WSWorldPizza.Models")]
+        WSWorldPizza.Models.UsuariosRoles[] CUsuariosRol(int id_rol);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IServiceWorldPizza/CUsuariosRol", ReplyAction="http://tempuri.org/IServiceWorldPizza/CUsuariosRolResponse")]
+        System.Threading.Tasks.Task<WSWorldPizza.Models.UsuariosRoles[]> CUsuariosRolAsync(int id_rol);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
@@ -103,6 +91,46 @@ namespace WebWorldPizza.WSWorldPizza {
         
         public System.Threading.Tasks.Task<string> bienvenidaAsync() {
             return base.Channel.bienvenidaAsync();
+        }
+        
+        public WSWorldPizza.Models.MenusRoles[] CMenusRoles(System.Nullable<int> id_menu, System.Nullable<int> id_rol) {
+            return base.Channel.CMenusRoles(id_menu, id_rol);
+        }
+        
+        public System.Threading.Tasks.Task<WSWorldPizza.Models.MenusRoles[]> CMenusRolesAsync(System.Nullable<int> id_menu, System.Nullable<int> id_rol) {
+            return base.Channel.CMenusRolesAsync(id_menu, id_rol);
+        }
+        
+        public WSWorldPizza.Models.Usuarios CUsuario(string nombreUsuario, System.Nullable<int> id_empleado) {
+            return base.Channel.CUsuario(nombreUsuario, id_empleado);
+        }
+        
+        public System.Threading.Tasks.Task<WSWorldPizza.Models.Usuarios> CUsuarioAsync(string nombreUsuario, System.Nullable<int> id_empleado) {
+            return base.Channel.CUsuarioAsync(nombreUsuario, id_empleado);
+        }
+        
+        public WSWorldPizza.Models.Usuarios[] CUsuarios(string filtroBusqueda) {
+            return base.Channel.CUsuarios(filtroBusqueda);
+        }
+        
+        public System.Threading.Tasks.Task<WSWorldPizza.Models.Usuarios[]> CUsuariosAsync(string filtroBusqueda) {
+            return base.Channel.CUsuariosAsync(filtroBusqueda);
+        }
+        
+        public WSWorldPizza.Models.UsuariosRoles[] CUsuarioRoles(string usuario) {
+            return base.Channel.CUsuarioRoles(usuario);
+        }
+        
+        public System.Threading.Tasks.Task<WSWorldPizza.Models.UsuariosRoles[]> CUsuarioRolesAsync(string usuario) {
+            return base.Channel.CUsuarioRolesAsync(usuario);
+        }
+        
+        public WSWorldPizza.Models.UsuariosRoles[] CUsuariosRol(int id_rol) {
+            return base.Channel.CUsuariosRol(id_rol);
+        }
+        
+        public System.Threading.Tasks.Task<WSWorldPizza.Models.UsuariosRoles[]> CUsuariosRolAsync(int id_rol) {
+            return base.Channel.CUsuariosRolAsync(id_rol);
         }
     }
 }

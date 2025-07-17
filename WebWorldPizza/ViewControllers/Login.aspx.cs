@@ -27,9 +27,6 @@ namespace WebWorldPizza.ViewControllers
             // Instanciamos la clase errores como una lista.
             List<Errores> errores = new List<Errores>();
 
-            //// Se instancia la clase utilidades.
-            //Utilidades utilidades = new Utilidades();
-
             using (var session = NHibernateHelperDBWorldPizza.OpenSession())
             {
                 try
@@ -52,12 +49,12 @@ namespace WebWorldPizza.ViewControllers
                         Session["CSRFToken"] = csrfToken;
 
                         // Conexión al WS-GestionesMM.
-                        var _serv = new WSWorldPizza.ServiceWorldPizzaClient();
+                        var _serv = new ServiceWorldPizzaClient();
 
                         Usuarios usuario = _serv.CUsuario(user.Value, null);
 
                         // Recuperamos los/el 'EmpleadosSubDepartamentos' para obtener los 'SubDepartamentos', los 'Departamentos' y las 'Areas' al que pertenece.
-                        List<EmpleadosSubDepartamentos> empleadosSubDepartamentos = _serv.CEmpleadosSubDepartamentos(usuario.empleado.id, null).ToList();
+                        //List<EmpleadosSubDepartamentos> empleadosSubDepartamentos = _serv.CEmpleadosSubDepartamentos(usuario.empleado.id, null).ToList();
 
                         // Recuperamos el rol al que pertenece el usuario.
                         List<UsuariosRoles> usuariosRolesList = _serv.CUsuarioRoles(usuario.usuario);
@@ -93,9 +90,9 @@ namespace WebWorldPizza.ViewControllers
                         string menusRol = getEncriptedMenuRol(usuariosRolesList, claveEncriptacionHex);
 
                         // Localidades sistema.
-                        List<Localidades> localidadesList = _serv.CLocalidades("");
-                        string json2 = serializer.Serialize(localidadesList);
-                        string encryptedJsonLocalidades = Encrypt(json2, claveEncriptacionHex);
+                        //List<Localidades> localidadesList = _serv.CLocalidades("");
+                        //string json2 = serializer.Serialize(localidadesList);
+                        //string encryptedJsonLocalidades = Encrypt(json2, claveEncriptacionHex);
 
                         // Estados gestiones.
                         List<EstadosGestiones> estadosList = _serv.CEstadosGestiones("");
@@ -109,12 +106,15 @@ namespace WebWorldPizza.ViewControllers
                                 sessionStorage.setItem('salt', '{saltAleatorio}');
                                 sessionStorage.setItem('tkn', '{csrfTokenEncrypt.ToString()}');
                                 sessionStorage.setItem('sessionUsr', '{encryptedJson}');
-                                sessionStorage.setItem('localidadesSistema', '{encryptedJsonLocalidades}');
+                                
                                 sessionStorage.setItem('estadosGestiones', '{encryptedEstados}');
                                 sessionStorage.setItem('pantallasRol', '{pantallasRol}');
                                 sessionStorage.setItem('menusRol', '{menusRol}');
                                 window.location.href = '/ViewControllers/Home.aspx';
                             </script>";
+
+                        //sessionStorage.setItem('localidadesSistema', '{encryptedJsonLocalidades}');
+
                         ClientScriptManager cs = Page.ClientScript;
                         cs.RegisterStartupScript(this.GetType(), "SetSessionData", script2);
 
@@ -128,17 +128,17 @@ namespace WebWorldPizza.ViewControllers
                 // Si se presentó un error al intentar validar un usuario.
                 catch (Exception ex)
                 {
-                    // Se llama al método que realiza el registro de errores
-                    errores.Add(utilidades.Aerror(
-                        "0001",
-                        "Login",
-                        "DBGestionesMM",
-                        $"Error validar las credenciales del usuario({user.Value}, pass({pass.Value})) " +
-                        "Contáctese con sistemas.",
-                        "",
-                        false,
-                        ex.Message
-                        ));
+                    //// Se llama al método que realiza el registro de errores
+                    //errores.Add(utilidades.Aerror(
+                    //    "0001",
+                    //    "Login",
+                    //    "DBGestionesMM",
+                    //    $"Error validar las credenciales del usuario({user.Value}, pass({pass.Value})) " +
+                    //    "Contáctese con sistemas.",
+                    //    "",
+                    //    false,
+                    //    ex.Message
+                    //    ));
 
                 }
 

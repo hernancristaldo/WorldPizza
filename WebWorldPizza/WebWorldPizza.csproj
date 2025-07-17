@@ -159,6 +159,9 @@
     <None Include="Connected Services\WSWorldPizza\ServiceWorldPizza2.xsd">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Properties\DataSources\WSWorldPizza.Models.MenusRoles.datasource" />
+    <Content Include="Properties\DataSources\WSWorldPizza.Models.Usuarios.datasource" />
+    <Content Include="Properties\DataSources\WSWorldPizza.Models.UsuariosRoles.datasource" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="JS\Masterpage.js" />
     <Content Include="JS\Utilidades\Alert.js" />
