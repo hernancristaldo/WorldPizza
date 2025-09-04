@@ -6,7 +6,7 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
-    <link href="/Content/style/Login.css" rel="stylesheet" />
+    <link href="/Content/Styles/Login.css" rel="stylesheet" />
 </head>
 <body id="bodyLogin">
     <form id="form1" runat="server">

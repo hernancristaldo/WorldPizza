@@ -1,7 +1,6 @@
 ﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using NHibernate;
-using WebWorldPizza.WSWorldPizza;
 
 namespace WebWorldPizza.Helpers
 {
@@ -32,7 +31,7 @@ namespace WebWorldPizza.Helpers
                 )
                 .Mappings(m =>
                           m.FluentMappings
-                              .AddFromAssemblyOf<IServiceWorldPizza>())
+                              .AddFromAssemblyOf<ViewControllers.Login>())
 
                 .BuildSessionFactory();
         }

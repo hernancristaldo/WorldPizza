@@ -113,13 +113,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Connected Services\WSWorldPizza\ServiceWorldPizza.disco" />
-    <None Include="Connected Services\WSWorldPizza\configuration91.svcinfo" />
-    <None Include="Connected Services\WSWorldPizza\configuration.svcinfo" />
-    <None Include="Connected Services\WSWorldPizza\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -149,31 +142,25 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
-    <None Include="Connected Services\WSWorldPizza\ServiceWorldPizza.wsdl" />
-    <None Include="Connected Services\WSWorldPizza\ServiceWorldPizza.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\WSWorldPizza\ServiceWorldPizza1.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Connected Services\WSWorldPizza\ServiceWorldPizza2.xsd">
-      <SubType>Designer</SubType>
-    </None>
+    <Content Include="Images\logo.png" />
+    <Content Include="js\Home.js" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.MenusRoles.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.Usuarios.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.UsuariosRoles.datasource" />
+    <Content Include="Properties\DataSources\WSWorldPizza.Models.PantallasRoles.datasource" />
+    <Content Include="Controller.ashx" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
-    <Content Include="JS\Masterpage.js" />
-    <Content Include="JS\Utilidades\Alert.js" />
-    <Content Include="JS\Utilidades\AsyncFetch.js" />
-    <Content Include="JS\Utilidades\Errores.js" />
-    <Content Include="JS\Utilidades\Modal.js" />
-    <Content Include="JS\Utilidades\ModalSmall.js" />
-    <Content Include="JS\Utilidades\Principal.js" />
-    <Content Include="JS\Utilidades\Spinner.js" />
-    <Content Include="JS\Utilidades\Tabla.js" />
-    <Content Include="JS\Utilidades\Toast.js" />
-    <Content Include="JS\Utilidades\Vistos.js" />
+    <Content Include="js\Masterpage.js" />
+    <Content Include="js\Utilidades\Alert.js" />
+    <Content Include="js\Utilidades\AsyncFetch.js" />
+    <Content Include="js\Utilidades\Errores.js" />
+    <Content Include="js\Utilidades\Modal.js" />
+    <Content Include="js\Utilidades\ModalSmall.js" />
+    <Content Include="js\Utilidades\Principal.js" />
+    <Content Include="js\Utilidades\Spinner.js" />
+    <Content Include="js\Utilidades\Tabla.js" />
+    <Content Include="js\Utilidades\Toast.js" />
+    <Content Include="js\Utilidades\Vistos.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
@@ -181,6 +168,8 @@
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\moment.js" />
+    <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\WebForms\DetailsView.js" />
     <Content Include="Scripts\WebForms\Focus.js" />
     <Content Include="Scripts\WebForms\GridView.js" />
@@ -203,23 +192,42 @@
     <Content Include="Scripts\WebForms\WebParts.js" />
     <Content Include="Scripts\WebForms\WebUIValidation.js" />
     <Content Include="Test.aspx" />
+    <Content Include="ViewControllers\Home.aspx" />
     <Content Include="ViewControllers\Login.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="Connected Services\WSWorldPizza\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
+    <Compile Include="Controller.ashx.cs">
+      <DependentUpon>Controller.ashx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CustomMsSqlDialect.cs" />
     <Compile Include="Helpers\NHibernateHelperDBWorldPizza.cs" />
+    <Compile Include="Mappings\EmpleadosMapping.cs" />
+    <Compile Include="Mappings\MenusMapping.cs" />
+    <Compile Include="Mappings\MenusRolesMapping.cs" />
+    <Compile Include="Mappings\PantallasMapping.cs" />
+    <Compile Include="Mappings\PantallasRolesMapping.cs" />
+    <Compile Include="Mappings\RolesMapping.cs" />
+    <Compile Include="Mappings\UsuariosMapping.cs" />
+    <Compile Include="Mappings\UsuariosRolesMapping.cs" />
+    <Compile Include="Metodos.cs" />
+    <Compile Include="Models\Empleados.cs" />
+    <Compile Include="Models\Errores.cs" />
+    <Compile Include="Models\Menus.cs" />
+    <Compile Include="Models\MenusRoles.cs" />
     <Compile Include="Models\outErrorVM.cs" />
+    <Compile Include="Models\Pantallas.cs" />
+    <Compile Include="Models\PantallasRoles.cs" />
+    <Compile Include="Models\Resultado.cs" />
+    <Compile Include="Models\Roles.cs" />
+    <Compile Include="Models\Usuarios.cs" />
+    <Compile Include="Models\UsuariosRoles.cs" />
+    <Compile Include="Models\ViewModels\UsuarioSesionVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Test.aspx.cs">
       <DependentUpon>Test.aspx</DependentUpon>
@@ -245,7 +253,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Controllers\" />
+    <Folder Include="Validators\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -261,15 +269,6 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Connected Services\WSWorldPizza\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\WSWorldPizza\WSWorldPizza.csproj">
-      <Project>{2CE4E855-3CF4-440D-8E52-2886007EA863}</Project>
-      <Name>WSWorldPizza</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

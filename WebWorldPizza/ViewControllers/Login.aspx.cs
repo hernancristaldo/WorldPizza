@@ -10,8 +10,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using WebWorldPizza.Helpers;
 using WebWorldPizza.Models;
-using WebWorldPizza.WSWorldPizza;
-using WSWorldPizza.Models;
+using WebWorldPizza.Models.ViewModels;
+
 
 namespace WebWorldPizza.ViewControllers
 {
@@ -26,6 +26,8 @@ namespace WebWorldPizza.ViewControllers
         {
             // Instanciamos la clase errores como una lista.
             List<Errores> errores = new List<Errores>();
+
+            Metodos metodo = new Metodos();
 
             using (var session = NHibernateHelperDBWorldPizza.OpenSession())
             {
@@ -46,18 +48,15 @@ namespace WebWorldPizza.ViewControllers
                         string csrfToken = Guid.NewGuid().ToString();
 
                         // Almacenar el nombre del usuario para tener control de la session en masterpage.
-                        Session["CSRFToken"] = csrfToken;
+                        Session["CSRFToken"] = csrfToken;                        
 
-                        // Conexión al WS-GestionesMM.
-                        var _serv = new ServiceWorldPizzaClient();
-
-                        Usuarios usuario = _serv.CUsuario(user.Value, null);
+                        Usuarios usuario = metodo.CUsuario(user.Value, null);
 
                         // Recuperamos los/el 'EmpleadosSubDepartamentos' para obtener los 'SubDepartamentos', los 'Departamentos' y las 'Areas' al que pertenece.
                         //List<EmpleadosSubDepartamentos> empleadosSubDepartamentos = _serv.CEmpleadosSubDepartamentos(usuario.empleado.id, null).ToList();
 
                         // Recuperamos el rol al que pertenece el usuario.
-                        List<UsuariosRoles> usuariosRolesList = _serv.CUsuarioRoles(usuario.usuario);
+                        List<UsuariosRoles> usuariosRolesList = metodo.CUsuarioRoles(usuario.usuario);
 
                         UsuarioSesionVM usuarioSesionVM = new UsuarioSesionVM()
                         {
@@ -95,25 +94,25 @@ namespace WebWorldPizza.ViewControllers
                         //string encryptedJsonLocalidades = Encrypt(json2, claveEncriptacionHex);
 
                         // Estados gestiones.
-                        List<EstadosGestiones> estadosList = _serv.CEstadosGestiones("");
-                        string jsonEstados = serializer.Serialize(estadosList);
-                        string encryptedEstados = Encrypt(jsonEstados, claveEncriptacionHex);
+                        //List<EstadosGestiones> estadosList = _serv.CEstadosGestiones("");
+                        //string jsonEstados = serializer.Serialize(estadosList);
+                        //string encryptedEstados = Encrypt(jsonEstados, claveEncriptacionHex);
 
                         string script2 = $@"
                             <script>
                                 sessionStorage.setItem('name', '{nombre}');
-                                sessionStorage.setItem('number', '{number.ToString()}');
+                                sessionStorage.setItem('number', '{number}');
                                 sessionStorage.setItem('salt', '{saltAleatorio}');
-                                sessionStorage.setItem('tkn', '{csrfTokenEncrypt.ToString()}');
-                                sessionStorage.setItem('sessionUsr', '{encryptedJson}');
+                                sessionStorage.setItem('tkn', '{csrfTokenEncrypt}');
+                                sessionStorage.setItem('sessionUsr', '{encryptedJson}');          
                                 
-                                sessionStorage.setItem('estadosGestiones', '{encryptedEstados}');
                                 sessionStorage.setItem('pantallasRol', '{pantallasRol}');
                                 sessionStorage.setItem('menusRol', '{menusRol}');
                                 window.location.href = '/ViewControllers/Home.aspx';
                             </script>";
 
                         //sessionStorage.setItem('localidadesSistema', '{encryptedJsonLocalidades}');
+                        //sessionStorage.setItem('estadosGestiones', '{encryptedEstados}');
 
                         ClientScriptManager cs = Page.ClientScript;
                         cs.RegisterStartupScript(this.GetType(), "SetSessionData", script2);
@@ -126,19 +125,14 @@ namespace WebWorldPizza.ViewControllers
 
                 }
                 // Si se presentó un error al intentar validar un usuario.
-                catch (Exception ex)
+                catch
                 {
-                    //// Se llama al método que realiza el registro de errores
-                    //errores.Add(utilidades.Aerror(
-                    //    "0001",
-                    //    "Login",
-                    //    "DBGestionesMM",
-                    //    $"Error validar las credenciales del usuario({user.Value}, pass({pass.Value})) " +
-                    //    "Contáctese con sistemas.",
-                    //    "",
-                    //    false,
-                    //    ex.Message
-                    //    ));
+                    // Se llama al método que realiza el registro de errores
+                    errores.Add(new Errores
+                    {
+                        cod_error = "0001",
+                        descripcion = $"Error validar las credenciales del usuario: {user.Value}, pass: {pass.Value}. Contáctese con sistemas."
+                    });
 
                 }
 
@@ -147,10 +141,10 @@ namespace WebWorldPizza.ViewControllers
 
         public static string getEncriptedPantallasRol(List<UsuariosRoles> usuariosRoles, string claveEncriptacion)
         {
-            var _serv = new ServiceWorldPizzaClient();
+            Metodos metodo = new Metodos();
 
             List<string> listaPantallas = usuariosRoles
-                .SelectMany(elem => _serv.CPantallasRoles(elem.id))
+                .SelectMany(elem => metodo.CPantallasRoles(elem.id))
                 .Select(pant => pant.pantalla.nombre_pantalla)
                 .ToList();
 
@@ -203,10 +197,10 @@ namespace WebWorldPizza.ViewControllers
         public static string getEncriptedMenuRol(List<UsuariosRoles> usuariosRolesList, string claveEncriptacionHex)
         {
 
-            var _serv = new ServiceWorldPizzaClient();
+            Metodos metodo = new Metodos();
 
             List<Menus> listaPantallas = usuariosRolesList
-                .SelectMany(elem => _serv.CMenusRoles(null, elem.id))
+                .SelectMany(elem => metodo.CMenusRoles(null, elem.id))
                 .Select(menu => menu.menu)
                 .ToList();
 

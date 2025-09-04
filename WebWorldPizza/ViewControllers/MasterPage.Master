@@ -9,26 +9,26 @@
     </asp:ContentPlaceHolder>
 
     <%-- Estilos --%>
-    <link href="/Content/style/Generales.css" rel="stylesheet" />
-    <link href="/Content/style/Modal.css" rel="stylesheet" />
-    <link href="/Content/style/Principal.css" rel="stylesheet" />
-    <link href="/Content/style/Masterpage.css" rel="stylesheet" />
-    <link href="/Content/style/Tabla.css" rel="stylesheet" />
+    <link href="/Content/Styles/Generales.css" rel="stylesheet" />
+    <link href="/Content/Styles/Modal.css" rel="stylesheet" />
+    <link href="/Content/Styles/Principal.css" rel="stylesheet" />
+    <link href="/Content/Styles/Masterpage.css" rel="stylesheet" />
+    <link href="/Content/Styles/Tabla.css" rel="stylesheet" />
     
     <%--<link href="/Content/style/Errores.css" rel="stylesheet" />--%>
    
-    <link href="/Content/style/Spinner.css" rel="stylesheet" />
-    <link href="/Content/style/Switch.css" rel="stylesheet" />
+    <link href="/Content/Styles/Spinner.css" rel="stylesheet" />
+    <link href="/Content/Styles/Switch.css" rel="stylesheet" />
     <%--<link href="/Content/style/Pestanas.css" rel="stylesheet" />--%>
-    <link href="/Content/style/Formulario.css" rel="stylesheet" />
+    <link href="/Content/Styles/Formulario.css" rel="stylesheet" />
     <%--<link href="/Content/style/Multiselect.css" rel="stylesheet" />--%>
     
-    <link href="/Content/style/Buttons.css" rel="stylesheet" />
-    <link href="/Content/style/Alert.css" rel="stylesheet" />
-    <link href="/Content/style/Toast.css" rel="stylesheet" />
+    <link href="/Content/Styles/Buttons.css" rel="stylesheet" />
+    <link href="/Content/Styles/Alert.css" rel="stylesheet" />
+    <link href="/Content/Styles/Toast.css" rel="stylesheet" />
     <%--<link href="/Content/style/FormularioSmall.css" rel="stylesheet" />--%>
     
-    <link href="/Content/style/Notificaciones.css" rel="stylesheet" />
+    <link href="/Content/Styles/Notificaciones.css" rel="stylesheet" />
 
     <%-- Icons google --%>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
@@ -127,5 +127,5 @@
     <%--<div id="contenedorDetalleNotificacion"></div>--%>
 </body>
 
-    <script type="module" src="/js/masterpage.js"></script>
+    <script type="module" src="/js/Masterpage.js"></script>
 </html>
