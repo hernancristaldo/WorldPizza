@@ -144,6 +144,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Images\logo.png" />
     <Content Include="js\Home.js" />
+    <Content Include="js\Pedidos.js" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.MenusRoles.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.Usuarios.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.UsuariosRoles.datasource" />
@@ -194,6 +195,7 @@
     <Content Include="Test.aspx" />
     <Content Include="ViewControllers\Home.aspx" />
     <Content Include="ViewControllers\Login.aspx" />
+    <Content Include="ViewControllers\Pedidos.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

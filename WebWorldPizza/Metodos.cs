@@ -21,7 +21,7 @@ namespace WebWorldPizza
             }
         }
 
-        public Usuarios CUsuario(string nombreUsuario, int? id_empleado)
+        public Usuarios CUsuario(string user, string pass)
         {
             // Instanciamos Resultado y seteamos la varaible resultado en "Ok".
             Usuarios usuario = new Usuarios();
@@ -39,25 +39,16 @@ namespace WebWorldPizza
                     try
                     {
 
-                        var query = sessionDBGestionesMM.QueryOver<Usuarios>()
-                                                        .Where(a => a.usuario != "");
-
-                        if (!string.IsNullOrEmpty(nombreUsuario))
-                        {
-                            query.WhereRestrictionOn(x => x.usuario).IsLike(nombreUsuario, MatchMode.Anywhere);
-                        }
-
-                        if (id_empleado != null)
-                        {
-                            query.JoinQueryOver(b => b.empleado)
-                                 .And(b => b.id == id_empleado);
-                        }
-
-                        usuario = query.SingleOrDefault();
+                        usuario = sessionDBGestionesMM.QueryOver<Usuarios>()
+                                                        .Where(a => a.usuario == user)
+                                                        .And(a => a.pass == pass)
+                                                        .SingleOrDefault();                        
 
                         // Si la consulta retorna resultados.
                         if (usuario == null)
                         {
+                            usuario = new Usuarios();
+
                             error = new Errores()
                             {
                                 descripcion = $"No se recupero ningun usuario que coincida con su busqueda.",

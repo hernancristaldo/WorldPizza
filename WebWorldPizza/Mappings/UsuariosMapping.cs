@@ -8,6 +8,7 @@ namespace WebWorldPizza.Mappings
         public UsuariosMapping()
         {
             Id(x => x.usuario);
+            Map(x => x.pass);
             References(x => x.empleado).Column("id_empleado").Not.LazyLoad();
 
             Table("Usuarios");

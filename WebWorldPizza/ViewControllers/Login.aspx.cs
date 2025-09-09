@@ -34,15 +34,17 @@ namespace WebWorldPizza.ViewControllers
                 try
                 {
                     // Se ejecuta el procedure que valida que el nombre de usuario u cla
-                    outErrorVM outError = session.CreateSQLQuery("exec SP_Login :musuario, :mpass, :mkey")
-                                            .SetParameter("musuario", user.Value)
-                                            .SetParameter("mpass", pass.Value)
-                                            .SetParameter("mkey", "bc548tdk_GestionesMMTesting")
-                                            .SetResultTransformer(new AliasToBeanResultTransformer(typeof(outErrorVM)))
-                                            .List<outErrorVM>().SingleOrDefault();
+                    //outErrorVM outError = session.CreateSQLQuery("exec SP_Login :musuario, :mpass, :mkey")
+                    //                        .SetParameter("musuario", user.Value)
+                    //                        .SetParameter("mpass", pass.Value)
+                    //                        .SetParameter("mkey", "bc548tdk_GestionesMMTesting")
+                    //                        .SetResultTransformer(new AliasToBeanResultTransformer(typeof(outErrorVM)))
+                    //                        .List<outErrorVM>().SingleOrDefault();
+
+                    Usuarios usuario = metodo.CUsuario(user.Value, pass.Value);
 
                     // Si las credenciales de usuario son correctas.
-                    if (outError.error == 0)
+                    if (usuario.resultado == "Ok")
                     {
                         // Generar un token CSRF
                         string csrfToken = Guid.NewGuid().ToString();
@@ -50,19 +52,13 @@ namespace WebWorldPizza.ViewControllers
                         // Almacenar el nombre del usuario para tener control de la session en masterpage.
                         Session["CSRFToken"] = csrfToken;                        
 
-                        Usuarios usuario = metodo.CUsuario(user.Value, null);
-
-                        // Recuperamos los/el 'EmpleadosSubDepartamentos' para obtener los 'SubDepartamentos', los 'Departamentos' y las 'Areas' al que pertenece.
-                        //List<EmpleadosSubDepartamentos> empleadosSubDepartamentos = _serv.CEmpleadosSubDepartamentos(usuario.empleado.id, null).ToList();
-
                         // Recuperamos el rol al que pertenece el usuario.
                         List<UsuariosRoles> usuariosRolesList = metodo.CUsuarioRoles(usuario.usuario);
 
                         UsuarioSesionVM usuarioSesionVM = new UsuarioSesionVM()
                         {
                             usuario = usuario,
-                            empleado = usuario.empleado,
-                            //empleadoSubDepartamentoList = empleadosSubDepartamentos,
+                            empleado = usuario.empleado,                            
                             UsuariosRoles = usuariosRolesList
                         };
 
@@ -86,17 +82,7 @@ namespace WebWorldPizza.ViewControllers
                         string pantallasRol = getEncriptedPantallasRol(usuariosRolesList, claveEncriptacionHex);
 
                         // Recuperamos los menus pertenecientes al rol.
-                        string menusRol = getEncriptedMenuRol(usuariosRolesList, claveEncriptacionHex);
-
-                        // Localidades sistema.
-                        //List<Localidades> localidadesList = _serv.CLocalidades("");
-                        //string json2 = serializer.Serialize(localidadesList);
-                        //string encryptedJsonLocalidades = Encrypt(json2, claveEncriptacionHex);
-
-                        // Estados gestiones.
-                        //List<EstadosGestiones> estadosList = _serv.CEstadosGestiones("");
-                        //string jsonEstados = serializer.Serialize(estadosList);
-                        //string encryptedEstados = Encrypt(jsonEstados, claveEncriptacionHex);
+                        string menusRol = getEncriptedMenuRol(usuariosRolesList, claveEncriptacionHex);                        
 
                         string script2 = $@"
                             <script>
@@ -104,25 +90,20 @@ namespace WebWorldPizza.ViewControllers
                                 sessionStorage.setItem('number', '{number}');
                                 sessionStorage.setItem('salt', '{saltAleatorio}');
                                 sessionStorage.setItem('tkn', '{csrfTokenEncrypt}');
-                                sessionStorage.setItem('sessionUsr', '{encryptedJson}');          
-                                
+                                sessionStorage.setItem('sessionUsr', '{encryptedJson}');        
                                 sessionStorage.setItem('pantallasRol', '{pantallasRol}');
                                 sessionStorage.setItem('menusRol', '{menusRol}');
                                 window.location.href = '/ViewControllers/Home.aspx';
                             </script>";
 
-                        //sessionStorage.setItem('localidadesSistema', '{encryptedJsonLocalidades}');
-                        //sessionStorage.setItem('estadosGestiones', '{encryptedEstados}');
-
+                       
                         ClientScriptManager cs = Page.ClientScript;
                         cs.RegisterStartupScript(this.GetType(), "SetSessionData", script2);
-
                     }
                     else
                     {
                         divError.Visible = true;
                     }
-
                 }
                 // Si se presentó un error al intentar validar un usuario.
                 catch
@@ -196,7 +177,6 @@ namespace WebWorldPizza.ViewControllers
 
         public static string getEncriptedMenuRol(List<UsuariosRoles> usuariosRolesList, string claveEncriptacionHex)
         {
-
             Metodos metodo = new Metodos();
 
             List<Menus> listaPantallas = usuariosRolesList
@@ -209,7 +189,6 @@ namespace WebWorldPizza.ViewControllers
             string encryptedJson = Encrypt(json, claveEncriptacionHex);
 
             return encryptedJson;
-
         }
 
         public static string GenerateRandomString(int length)
