@@ -20,6 +20,14 @@
     grid-area: area-logo;
 }
 
+    .logo img {
+        display: flex;
+        width: 65%;
+        max-width: 65%;
+        margin-left: 10%;
+        margin-top: -10px;
+    }
+
 .barra-superior {
     background-color: white;
     grid-area: area-barra-sup;

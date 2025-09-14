@@ -9,6 +9,6 @@ namespace WebWorldPizza.Models.ViewModels
     {
         public virtual Usuarios usuario { get; set; }
         public virtual Empleados empleado { get; set; }
-        public virtual List<UsuariosRoles> UsuariosRoles { get; set; }        
+        public virtual List<UsuariosRoles> usuarioRoles { get; set; }        
     }
 }

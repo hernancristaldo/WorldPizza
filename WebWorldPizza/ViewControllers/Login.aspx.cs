@@ -32,14 +32,7 @@ namespace WebWorldPizza.ViewControllers
             using (var session = NHibernateHelperDBWorldPizza.OpenSession())
             {
                 try
-                {
-                    // Se ejecuta el procedure que valida que el nombre de usuario u cla
-                    //outErrorVM outError = session.CreateSQLQuery("exec SP_Login :musuario, :mpass, :mkey")
-                    //                        .SetParameter("musuario", user.Value)
-                    //                        .SetParameter("mpass", pass.Value)
-                    //                        .SetParameter("mkey", "bc548tdk_GestionesMMTesting")
-                    //                        .SetResultTransformer(new AliasToBeanResultTransformer(typeof(outErrorVM)))
-                    //                        .List<outErrorVM>().SingleOrDefault();
+                {                   
 
                     Usuarios usuario = metodo.CUsuario(user.Value, pass.Value);
 
@@ -53,13 +46,13 @@ namespace WebWorldPizza.ViewControllers
                         Session["CSRFToken"] = csrfToken;                        
 
                         // Recuperamos el rol al que pertenece el usuario.
-                        List<UsuariosRoles> usuariosRolesList = metodo.CUsuarioRoles(usuario.usuario);
+                        List<UsuariosRoles> usuarioRolesList = metodo.CUsuarioRoles(usuario.usuario);
 
                         UsuarioSesionVM usuarioSesionVM = new UsuarioSesionVM()
                         {
                             usuario = usuario,
                             empleado = usuario.empleado,                            
-                            UsuariosRoles = usuariosRolesList
+                            usuarioRoles = usuarioRolesList
                         };
 
                         // Generamos una clave con datos y encriptacion convenida, que luego va a ser generada de la misma manera en el cliente para encriptar y desencriptar datos sin tener la clave almacenada.
@@ -79,10 +72,10 @@ namespace WebWorldPizza.ViewControllers
                         string encryptedJson = Encrypt(json, claveEncriptacionHex);
 
                         // Recuperamos las pantallas pertenecientes al rol.
-                        string pantallasRol = getEncriptedPantallasRol(usuariosRolesList, claveEncriptacionHex);
+                        string pantallasRol = getEncriptedPantallasRol(usuarioRolesList, claveEncriptacionHex);
 
                         // Recuperamos los menus pertenecientes al rol.
-                        string menusRol = getEncriptedMenuRol(usuariosRolesList, claveEncriptacionHex);                        
+                        string menusRol = getEncriptedMenuRol(usuarioRolesList, claveEncriptacionHex);                        
 
                         string script2 = $@"
                             <script>
@@ -120,12 +113,12 @@ namespace WebWorldPizza.ViewControllers
             }
         }
 
-        public static string getEncriptedPantallasRol(List<UsuariosRoles> usuariosRoles, string claveEncriptacion)
+        public static string getEncriptedPantallasRol(List<UsuariosRoles> usuarioRolesList, string claveEncriptacion)
         {
             Metodos metodo = new Metodos();
 
-            List<string> listaPantallas = usuariosRoles
-                .SelectMany(elem => metodo.CPantallasRoles(elem.id))
+            List<string> listaPantallas = usuarioRolesList
+                .SelectMany(elem => metodo.CPantallasRoles(elem.rol.id))
                 .Select(pant => pant.pantalla.nombre_pantalla)
                 .ToList();
 
@@ -180,7 +173,7 @@ namespace WebWorldPizza.ViewControllers
             Metodos metodo = new Metodos();
 
             List<Menus> listaPantallas = usuariosRolesList
-                .SelectMany(elem => metodo.CMenusRoles(null, elem.id))
+                .SelectMany(elem => metodo.CMenusRoles(null, elem.rol.id))
                 .Select(menu => menu.menu)
                 .ToList();
 

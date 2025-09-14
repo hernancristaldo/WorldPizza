@@ -1,6 +1,6 @@
 ﻿import AsyncFetch from '/js/Utilidades/Asyncfetch.js';
-import InstanciaCry from '/js/Utilidades/cry.js';
-import CampanitaNotificaciones from '/js/Utilidades/CampanitaNotificaciones.js';
+import InstanciaCry from '/js/Utilidades/Cry.js';
+//import CampanitaNotificaciones from '/js/Utilidades/CampanitaNotificaciones.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     new Nav();
@@ -34,9 +34,11 @@ class Nav {
         const sessionUser = JSON.parse(usuario);
 
         if (sessionUser.usuario.resultado === "Ok") this.empleado = sessionUser.usuario.empleado;
+        
+        document.querySelector("#user").innerHTML = this.empleado.usuario_abm;
 
         // Metodo para obtener notificaciones periodicamente.
-        this.iniciarIntervaloNotificaciones(this.empleado);
+        //this.iniciarIntervaloNotificaciones(this.empleado);
 
         return;
     }
@@ -168,7 +170,8 @@ class Nav {
     async llenarNavDesktop() {
 
         const menusRol = await InstanciaCry.decSer(sessionStorage.getItem('menusRol'));
-        const menuUsuario = JSON.parse(menusRol)
+        const menuUsuario = JSON.parse(menusRol);
+        
 
         // Filtrar los elementos con id_padre nulo y ordenar por la propiedad orden de forma ascendente.
         const menuFiltrado = menuUsuario.filter(({ id_padre }) => id_padre === null);

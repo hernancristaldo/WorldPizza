@@ -60,18 +60,27 @@
         </div>
         <!-- nav mobile -->
         <div class="conteiner">
-            <div class="logo"></div>
+            <div class="logo">
+                <%--<img src="../Images/logo.png" />--%>
+            </div>
             <div class="barra-superior">
             
 
 <div class="control-usuario">
     <div id="iconos-usuario">
-        <span data-element="user" class="material-symbols-outlined">
+        <%--<span data-element="user" class="material-symbols-outlined">
             supervised_user_circle
         </span>
         <span data-element="notificacion" class="material-symbols-outlined">
             notifications
-        </span>
+        </span>--%>
+
+        <div>
+            <label id="user"></label>  
+        </div>
+        <div>
+            <a href="/ViewControllers/Login.aspx" class="link" style="margin-top: 30px;" data-element="cerrarSesion">Cerrar sesion</a>
+        </div>
     </div>
     </div>
     </div>

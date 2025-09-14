@@ -9,7 +9,7 @@ namespace WebWorldPizza.Mappings
         {
             Id(x => x.id);
             References(x => x.usuario).Column("usuario").Not.LazyLoad();
-            References(x => x.roles).Column("id_rol").Not.LazyLoad();
+            References(x => x.rol).Column("id_rol").Not.LazyLoad();
 
             Table("UsuariosRoles");
         }
