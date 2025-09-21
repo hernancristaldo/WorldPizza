@@ -12,7 +12,7 @@ namespace WebWorldPizza.Models
         public virtual string apellido_nombre { get; set; }
         public virtual DateTime? fecha_nacimiento { get; set; }
         public virtual string mail { get; set; }
-        public virtual DateTime? fecha_alta { get; set; }
+        public virtual DateTime fecha_alta { get; set; }
         public virtual DateTime? fecha_baja { get; set; }
         public virtual string usuario_abm { get; set; }
 

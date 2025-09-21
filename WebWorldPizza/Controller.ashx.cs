@@ -39,7 +39,27 @@ namespace WebWorldPizza
                 {
                     case "CrearApiKey":
                         context.Response.Write(JsonConvert.SerializeObject(CrearApiKey()));
-                        break;                    
+                        break;
+
+                    case "CProductos":
+                        context.Response.Write(JsonConvert.SerializeObject(CProductos(requestData)));
+                        break;
+
+                    case "AProducto":
+                        context.Response.Write(JsonConvert.SerializeObject(AProducto(requestData)));
+                        break;
+
+                    case "BProducto":
+                        context.Response.Write(JsonConvert.SerializeObject(BProducto(requestData)));
+                        break;
+
+                    case "MProducto":
+                        context.Response.Write(JsonConvert.SerializeObject(MProducto(requestData)));
+                        break;
+
+                    case "CEmpleados":
+                        context.Response.Write(JsonConvert.SerializeObject(CEmpleados(requestData)));
+                        break;
 
                     default:
                         throw new ArgumentException("Solicitud no válida");
@@ -107,6 +127,9 @@ namespace WebWorldPizza
         public class RequestData
         {
             public string accion { get; set; }
+            public string filtroBusqueda { get; set; }
+            public Productos producto { get; set; }
+            public int id_producto { get; set; }
             
         }
 
@@ -146,6 +169,31 @@ namespace WebWorldPizza
         private string CrearApiKey()
         {
             return metodo.GenerateApiKey();
+        }
+
+        private List<Productos> CProductos(RequestData data)
+        {
+            return metodo.CProductos(data.filtroBusqueda);
+        }
+
+        private Productos AProducto(RequestData data)
+        {
+            return metodo.AProducto(data.producto);
+        }
+
+        private Resultado MProducto(RequestData data)
+        {
+            return metodo.MProducto(data.producto);
+        }
+
+        private Resultado BProducto(RequestData data)
+        {
+            return metodo.BProducto(data.id_producto);
+        }
+
+        private List<Empleados> CEmpleados(RequestData data)
+        {
+            return metodo.CEmpleados(data.filtroBusqueda);
         }
 
         public bool IsReusable => false;

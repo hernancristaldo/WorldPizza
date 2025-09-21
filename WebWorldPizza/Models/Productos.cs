@@ -8,7 +8,7 @@ namespace WebWorldPizza.Models
         public virtual int id { get; set; }
         public virtual string nombre { get; set; }
         public virtual string descripcion { get; set; }
-        public virtual decimal precio { get; set; }
+        public virtual decimal? precio { get; set; }
 
         [NotMapped]
         public virtual string resultado { get; set; }
