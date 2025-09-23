@@ -163,6 +163,7 @@
     <Content Include="js\ModuloPedidos.js" />
     <Content Include="js\Pedidos.js" />
     <Content Include="js\Productos.js" />
+    <Content Include="js\Usuarios.js" />
     <Content Include="js\Utilidades\Cry.js" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.MenusRoles.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.Usuarios.datasource" />
@@ -272,6 +273,7 @@
     </Compile>
     <Compile Include="Validators\EmpleadosValidator.cs" />
     <Compile Include="Validators\ProductosValidator.cs" />
+    <Compile Include="Validators\UsuariosValidator.cs" />
     <Compile Include="ViewControllers\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

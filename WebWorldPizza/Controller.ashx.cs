@@ -61,6 +61,18 @@ namespace WebWorldPizza
                         context.Response.Write(JsonConvert.SerializeObject(CEmpleados(requestData)));
                         break;
 
+                    case "AEmpleado":
+                        context.Response.Write(JsonConvert.SerializeObject(AEmpleado(requestData)));
+                        break;
+
+                    case "BEmpleado":
+                        context.Response.Write(JsonConvert.SerializeObject(BEmpleado(requestData)));
+                        break;
+
+                    case "MEmpleado":
+                        context.Response.Write(JsonConvert.SerializeObject(MEmpleado(requestData)));
+                        break;
+
                     default:
                         throw new ArgumentException("Solicitud no válida");
                 }
@@ -130,6 +142,8 @@ namespace WebWorldPizza
             public string filtroBusqueda { get; set; }
             public Productos producto { get; set; }
             public int id_producto { get; set; }
+            public Empleados empleado { get; set; }
+            public int id_empleado { get; set; }
             
         }
 
@@ -194,6 +208,21 @@ namespace WebWorldPizza
         private List<Empleados> CEmpleados(RequestData data)
         {
             return metodo.CEmpleados(data.filtroBusqueda);
+        }
+
+        private Empleados AEmpleado(RequestData data)
+        {
+            return metodo.AEmpleado(data.empleado);
+        }
+
+        private Resultado MEmpleado(RequestData data)
+        {
+            return metodo.MEmpleado(data.empleado);
+        }
+
+        private Resultado BEmpleado(RequestData data)
+        {
+            return metodo.BEmpleado(data.id_empleado);
         }
 
         public bool IsReusable => false;

@@ -49,31 +49,35 @@
                 <div class="formulario-3">
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">DNI/CUIT</label>
-                        <input type="text" id="editDni" class="formbold-form-input" data-validate="dni" data-editable="true" required/>   
+                        <input type="text" id="editDni" class="formbold-form-input" data-validate="dni" data-editable="true" required disabled />   
                         <div class="individual-errores"></div>
                     </div>
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">Apellido y Nombre</label>
-                        <input type="text" id="editNombre" class="formbold-form-input" data-validate="apellido_nombre" data-editable="true" required/>   
+                        <input type="text" id="editNombre" class="formbold-form-input" data-validate="apellido_nombre" data-editable="true" required disabled />   
                         <div class="individual-errores"></div>
                     </div>                    
                     <div class="formulario__grupo">
-                        <label class="formbold-form-label">Fecha nacimiento</label>
-                        <input type="date" id="editFechaNacimiento" class="formbold-form-input" data-editable="true"/>                    
-                    </div> 
-                </div>
-                <div class="formulario-2">
+                        <label class="formbold-form-label">Domicilio</label>
+                        <input type="text" id="editDomicilio" class="formbold-form-input" data-validate="domicilio" data-editable="true" required disabled/>                    
+                        <div class="individual-errores"></div>
+                    </div>
+                    <div class="formulario__grupo">
+                        <label class="formbold-form-label">Telefono</label>
+                        <input type="text" id="editTelefono" class="formbold-form-input" data-validate="nro_telefono" data-editable="true" required disabled />   
+                        <div class="individual-errores"></div>
+                    </div>
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">Mail</label>
-                        <input type="email" id="editMail" class="formbold-form-input" data-validate="mail" data-editable="true" required/>                    
-                        <div class="individual-errores"></div>
+                        <input type="email" id="editMail" class="formbold-form-input" data-validate="mail" data-editable="true" value="@" disabled />                  
                     </div> 
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">User</label>
-                        <input type="text" id="editUser" class="formbold-form-input" data-validate="usuario_abm" data-editable="true" required/>                    
+                        <input type="text" id="editUsuario" class="formbold-form-input" data-validate="usuario_abm" data-editable="true" required disabled />                    
                         <div class="individual-errores"></div>
                     </div>
-                </div> 
+                </div>
+                 
             </div>         
 
             <button data-element="btnGuardar" style="display:none" class="custom-btn-guardar" type="button">Editar</button>        
@@ -96,22 +100,26 @@
                         <div class="individual-errores"></div>
                     </div>                    
                     <div class="formulario__grupo">
-                        <label class="formbold-form-label">Fecha nacimiento</label>
-                        <input type="date" id="fechaNacimiento" class="formbold-form-input" data-editable="true"/>                    
+                        <label class="formbold-form-label">Domicilio</label>
+                        <input type="text" id="domicilio" class="formbold-form-input" data-validate="domicilio" data-editable="true" required/> 
+                        <div class="individual-errores"></div>
                     </div> 
-                </div>
-                <div class="formulario-2">
+                    <div class="formulario__grupo">
+                        <label class="formbold-form-label">Telefono</label>
+                        <input type="text" id="telefono" class="formbold-form-input" data-validate="nro_telefono" data-editable="true" required/>                    
+                        <div class="individual-errores"></div>
+                    </div> 
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">Mail</label>
-                        <input type="email" id="mail" class="formbold-form-input" data-validate="mail" data-editable="true" required/>                    
-                        <div class="individual-errores"></div>
+                        <input type="email" id="mail" class="formbold-form-input" data-editable="true" value="@"/>                   
                     </div> 
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">User</label>
-                        <input type="text" id="user" class="formbold-form-input" data-validate="usuario_abm" data-editable="true" required/>                    
+                        <input type="text" id="usuario" class="formbold-form-input" data-validate="usuario_abm" data-editable="true" required/>                    
                         <div class="individual-errores"></div>
                     </div>
-                </div>        
+                </div>
+                       
                 
                 <button data-element="btnGuardar" class="custom-btn-guardar" type="button">Guardar</button>
             </div>

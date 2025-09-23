@@ -12,9 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 class EmpleadosIndex {
-    constructor(empleados) {
+    constructor(filtroUsado, empleados) {
         this.asyncFetch = new AsyncFetch();
         this.empleados = [];
+        this.filtroUsado = false;
         this.user = null;
         this.editar = false;
 
@@ -27,8 +28,10 @@ class EmpleadosIndex {
                 id_elemento: "tabla"
             });
 
-            this.spinnerTabla.mostrarSpinner();
-            this.busqueda();
+            if (filtroUsado) {
+                this.spinnerTabla.mostrarSpinner();
+                this.busqueda();
+            }            
 
             return EmpleadosIndex.instance;
         }
@@ -109,8 +112,9 @@ class EmpleadosIndex {
         });
 
         if (response[0].resultado === "Ok") {
-            let empleadosActivos = response.filter(e => e.fecha_baja === null);
-            console.log(empleadosActivos);
+
+            // Solo se mantienen los que estan activos.
+            let empleadosActivos = response.filter(e => e.fecha_baja === null);            
             return empleadosActivos;
         }
 
@@ -128,7 +132,7 @@ class EmpleadosIndex {
             if (elem === "nuevoEmpleado") {
 
                 // Se instancia la clase para dar de alta un empleado.
-                new AltaEmpleado(this.user, this.empleados);                
+                new AltaEmpleado(this.filtroUsado, this.user, this.empleados);
             }
 
             // Se realiza la busqueda de empleados de acuerdo al filtro de busqueda.
@@ -159,11 +163,12 @@ class EmpleadosIndex {
             let [empleado] = this.empleados.filter(p => p.id.toString() === elem);
 
             // Se instancia la clase para editar el empleado.
-            new EdicionEmpleado(this.editar, this.user, empleado, this.empleados);
+            new EdicionEmpleado(this.filtroUsado, this.editar, this.user, empleado, this.empleados);
         });
     }
     busqueda() {
-
+        this.filtroUsado = true;
+        
         let array = this.empleados;
         const text = document.querySelector("#txtBusqueda").value;
 
@@ -229,13 +234,14 @@ class EmpleadosIndex {
 
 
 class EdicionEmpleado {
-    constructor(editar, user, empleado, empleados) {
+    constructor(filtroUsado, editar, user, empleado, empleados) {
         this.asyncFetch = new AsyncFetch();
+        this.filtroUsado = filtroUsado;
         this.editar = editar;
         this.user = user;
         this.empleado = empleado;
         this.empleados = empleados;
-
+        
         this.main();
     }
     async main() {
@@ -286,9 +292,10 @@ class EdicionEmpleado {
         // Se setean los campos con los datos del empleado.
         document.querySelector("#editDni").value = this.empleado.dni;
         document.querySelector("#editNombre").value = this.empleado.apellido_nombre;
-        document.querySelector("#editFechaNacimiento").valueAsDate = this.empleado.fecha_nacimiento === null ? "" : this.empleado.fecha_nacimiento;
+        document.querySelector("#editTelefono").value = this.empleado.nro_telefono;
+        document.querySelector("#editDomicilio").value = this.empleado.domicilio;
         document.querySelector("#editMail").value = this.empleado.mail;
-        document.querySelector("#editUser").value = this.empleado.usuario_abm;
+        document.querySelector("#editUsuario").value = this.empleado.usuario_abm;
 
         this.modal.ocultarSpinner();
     }
@@ -340,7 +347,7 @@ class EdicionEmpleado {
             else if (elem === "cerrarModal") {
 
                 // Se vuelve a la pantalla principal.
-                new EmpleadosIndex(this.empleados);
+                new EmpleadosIndex(this.filtroUsado, this.empleados);
             }
         });
     }
@@ -350,10 +357,11 @@ class EdicionEmpleado {
         const obj = {
             id: this.empleado.id,
             dni: document.querySelector("#editDni").value,
-            apellido_nombre: document.querySelector("#editNombre").value,
-            fecha_nacimiento: document.querySelector("#editFechaNacimiento").value,
+            apellido_nombre: document.querySelector("#editNombre").value,            
             mail: document.querySelector("#editMail").value,
-            usuario_abm: document.querySelector("#editUser").value,
+            domicilio: document.querySelector("#editDomicilio").value,
+            nro_telefono: document.querySelector("#editTelefono").value,
+            usuario_abm: document.querySelector("#editUsuario").value,
             fecha_alta: this.empleado.fecha_alta
         };
 
@@ -405,7 +413,8 @@ class EdicionEmpleado {
                     ...{
                         dni: data.empleado.dni,
                         apellido_nombre: data.empleado.apellido_nombre,
-                        fecha_nacimiento: data.empleado.fecha_nacimiento,
+                        domicilio: data.empleado.domicilio,
+                        nro_telefono: data.empleado.nro_telefono,
                         mail: data.empleado.mail,
                         usuario_abm: data.empleado.usuario_abm
                     }
@@ -523,8 +532,9 @@ class EdicionEmpleado {
 
 
 class AltaEmpleado {
-    constructor(user, empleados) {
+    constructor(filtroUsado, user, empleados) {
         this.asyncFetch = new AsyncFetch();
+        this.filtroUsado = filtroUsado;
         this.user = user;
         this.empleados = empleados;
 
@@ -564,7 +574,7 @@ class AltaEmpleado {
             else if (elem === "cerrarModal") {
 
                 // Se vuelve a la pantalla principal.
-                new EmpleadosIndex(this.empleados);
+                new EmpleadosIndex(this.filtroUsado, this.empleados);
             }
         });
     }
@@ -573,10 +583,11 @@ class AltaEmpleado {
         // Se recupera el valor de los campos completados.      
         const obj = {
             dni: document.querySelector("#dni").value,
-            apellido_nombre: document.querySelector("#nombre").value,
-            fecha_nacimiento: document.querySelector("#fechaNacimiento").value === "" ? null : document.querySelector("#fechaNacimiento").value,
+            apellido_nombre: document.querySelector("#nombre").value,            
             mail: document.querySelector("#mail").value,
-            usuario_abm: document.querySelector("#user").value
+            domicilio: document.querySelector("#domicilio").value,
+            nro_telefono: document.querySelector("#telefono").value,
+            usuario_abm: document.querySelector("#usuario").value
         };
 
         // Se crea un objeto para guardar los datos obtenidos.
@@ -590,7 +601,7 @@ class AltaEmpleado {
     async guardarEmpleado() {
 
         // Recuperamos los campos.        
-        const data = await this.recuperarDatos();
+        const data = await this.recuperarDatos();        
 
         // Se realiza el alta del empleado.
         const response = await this.asyncFetch.fetch({

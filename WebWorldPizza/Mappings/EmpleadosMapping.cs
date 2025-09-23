@@ -15,6 +15,8 @@ namespace WebWorldPizza.Mappings
             Map(x => x.fecha_alta);
             Map(x => x.fecha_baja);
             Map(x => x.usuario_abm);
+            Map(x => x.domicilio);
+            Map(x => x.nro_telefono);
 
             Table("Empleados");
         }

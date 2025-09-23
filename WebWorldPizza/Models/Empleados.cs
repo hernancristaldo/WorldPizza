@@ -15,6 +15,8 @@ namespace WebWorldPizza.Models
         public virtual DateTime fecha_alta { get; set; }
         public virtual DateTime? fecha_baja { get; set; }
         public virtual string usuario_abm { get; set; }
+        public virtual string domicilio { get; set; }
+        public virtual string nro_telefono { get; set; }
 
         [NotMapped]
         public virtual string resultado { get; set; }

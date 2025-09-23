@@ -25,85 +25,7 @@ namespace WebWorldPizza
             }
         }
 
-        public Usuarios CUsuario(string user, string pass)
-        {
-            // Instanciamos Resultado y seteamos la varaible resultado en "Ok".
-            Usuarios usuario = new Usuarios();
-
-            // Se instancia la clase errores como una lista.
-            List<Errores> errores = new List<Errores>();
-
-            // Se instancia la clase Errores.
-            Errores error = new Errores();            
-
-            try
-            {
-                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
-                {
-                    try
-                    {
-
-                        usuario = sessionDBGestionesMM.QueryOver<Usuarios>()
-                                                        .Where(a => a.usuario == user)
-                                                        .And(a => a.pass == pass)
-                                                        .SingleOrDefault();                        
-
-                        // Si la consulta retorna resultados.
-                        if (usuario == null)
-                        {
-                            usuario = new Usuarios();
-
-                            error = new Errores()
-                            {
-                                descripcion = $"No se recupero ningun usuario que coincida con su busqueda.",
-                                cod_error = "0001"
-                            };
-
-                            errores.Add(error);                           
-
-                            usuario.resultado = "Error";
-                            usuario.errores = errores;
-
-                        }
-                        else
-                        {
-                            // Seteamos resultado en "Ok".
-                            usuario.resultado = "Ok";
-                        }                       
-
-                    }                    
-                    catch
-                    {
-
-                        usuario = new Usuarios();
-
-                        // Se llama al método que realiza el registro de errores
-                        // y se agrega a la lista de errores el objeto devuelto por el método.
-                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar el usuario." });
-
-                        // Se setea la variable resultado en "Error"
-                        usuario.resultado = "Error";
-                        usuario.errores = errores;
-
-                    }
-                }
-            }
-            catch
-            {
-
-                // Se llama al método que realiza el registro de errores
-                // y se agrega a la lista de errores el objeto devuelto por el método.
-                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
-
-                // Se setea la variable resultado en "Error"
-                usuario.resultado = "Error";
-                usuario.errores = errores;
-
-            }
-
-            return usuario;
-
-        }
+        
 
         public List<UsuariosRoles> CUsuarioRoles(string usuario)
         {
@@ -383,6 +305,387 @@ namespace WebWorldPizza
             return menuList;
         }
 
+        #region ABMCUsuarios
+        public Usuarios CUsuario(string user, string pass)
+        {
+            // Instanciamos Resultado y seteamos la varaible resultado en "Ok".
+            Usuarios usuario = new Usuarios();
+
+            // Se instancia la clase errores como una lista.
+            List<Errores> errores = new List<Errores>();
+
+            // Se instancia la clase Errores.
+            Errores error = new Errores();
+
+            try
+            {
+                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    try
+                    {
+
+                        usuario = sessionDBGestionesMM.QueryOver<Usuarios>()
+                                                        .Where(a => a.usuario == user)
+                                                        .And(a => a.pass == pass)
+                                                        .SingleOrDefault();
+
+                        // Si la consulta retorna resultados.
+                        if (usuario == null)
+                        {
+                            usuario = new Usuarios();
+
+                            error = new Errores()
+                            {
+                                descripcion = $"No se recupero ningun usuario que coincida con su busqueda.",
+                                cod_error = "0001"
+                            };
+
+                            errores.Add(error);
+
+                            usuario.resultado = "Error";
+                            usuario.errores = errores;
+
+                        }
+                        else
+                        {
+                            // Seteamos resultado en "Ok".
+                            usuario.resultado = "Ok";
+                        }
+
+                    }
+                    catch
+                    {
+
+                        usuario = new Usuarios();
+
+                        // Se llama al método que realiza el registro de errores
+                        // y se agrega a la lista de errores el objeto devuelto por el método.
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar el usuario." });
+
+                        // Se setea la variable resultado en "Error"
+                        usuario.resultado = "Error";
+                        usuario.errores = errores;
+
+                    }
+                }
+            }
+            catch
+            {
+
+                // Se llama al método que realiza el registro de errores
+                // y se agrega a la lista de errores el objeto devuelto por el método.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+
+                // Se setea la variable resultado en "Error"
+                usuario.resultado = "Error";
+                usuario.errores = errores;
+
+            }
+
+            return usuario;
+
+        }
+
+        public List<Usuarios> CUsuarios(string filtroBusqueda, int? id_empleado)
+        {
+            // Instanciamos una lista de objetos.
+            List<Usuarios> usuariosList = new List<Usuarios>();
+
+            // Instanciamos objeto.
+            Usuarios usuario = new Usuarios();
+
+            // Instanciamos una lista de Errores.
+            List<Errores> errores = new List<Errores>();            
+
+            try
+            {
+                using (var session = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    try
+                    {
+                        Usuarios u = null;
+                        
+                        var query = session.QueryOver<Usuarios>(() => u)
+                                                        .Where(a => a.usuario != "");
+
+                        // Se busca el filtro de busqueda. Solo se ejecuta si el filtro de busqueda no es null.
+                        if (filtroBusqueda != null) query.And(m => m.usuario.IsLike(filtroBusqueda, MatchMode.Anywhere));
+
+                        // Se busca por el id_empleado.
+                        if (id_empleado != null) query.JoinQueryOver(e => u.empleado)
+                                                      .Where(e => e.id == id_empleado);
+
+                        usuariosList = new List<Usuarios>(query.List());
+
+                        // Si la búsqueda no retorna resultados.
+                        if (usuariosList.Count == 0) {
+
+                            errores.Add(new Errores { cod_error = "0001", descripcion = "No se encontro ningun usuario que coincida con su busqueda." });
+                            usuario.resultado = "Error";
+                            usuario.errores = errores;
+                            usuariosList.Add(usuario);
+                        }
+                        else
+                        {
+                            // A cada objeto recuperado le seteamos la variable resultado en "Ok".
+                            foreach (Usuarios a in usuariosList) { a.resultado = "Ok"; }
+                        }                      
+
+                    }
+                    catch
+                    {                      
+                        // Se guarda el error.
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los usuraios."});                        
+                        usuario.resultado = "Error";
+                        usuario.errores = errores;
+                        usuariosList.Add(usuario);
+                    }
+                }
+            }
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                usuario.resultado = "Error";
+                usuario.errores = errores;
+                usuariosList.Add(usuario);
+            }
+
+            return usuariosList;
+        }
+
+        public Usuarios AUsuario(Usuarios usuario)
+        {
+            // Se instancia la clase Errores como una lista.
+            List<Errores> errores = new List<Errores>();
+
+            try
+            {
+                // Se instancia la clase UsuariosValidator.
+                UsuariosValidator validator = new UsuariosValidator();
+
+                // Se llama al metodo de validacion pasandole como parametros la validacion y regla a validar.
+                ValidationResult result = validator.Validate(usuario, ruleSet: "Create");
+
+                // Si no hubo errores en la validacion.
+                if (result.IsValid)
+                {
+                    // Se abre session con la Base de Datos.
+                    using (var session = NHibernateHelperDBWorldPizza.OpenSession())
+                    {
+                        // Se abre transaccion.
+                        using (var transaction = session.BeginTransaction())
+                        {
+                            try
+                            {
+                                // Se guarda la Marca en la Base de Datos y se recupera el id generado.
+                                session.Save(usuario);
+
+                                // Se confirma transaccion.
+                                transaction.Commit();
+
+                                usuario.resultado = "Ok";
+                            }
+                            // Si hubo errores en el alta de la Marca.
+                            catch
+                            {
+                                // Se vuelve atras la transaccion.
+                                transaction.Rollback();
+
+                                // Guarda el error
+                                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al dar de alta el usuario." });
+                                usuario.errores = errores;
+                                usuario.resultado = "Error";
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (ValidationFailure detalleError in result.Errors)
+                    {
+                        // Se agrega a la lista el código y detalle del error de validación.
+                        errores.Add(new Errores()
+                        {
+                            cod_error = detalleError.ErrorCode,
+                            descripcion = detalleError.ErrorMessage,
+                            propiedad = detalleError.PropertyName
+                        });
+                    }
+
+                    // Se guardan los errores.
+                    usuario.resultado = "Error";
+                    usuario.errores = errores;
+                }
+            }
+            catch
+            {
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                usuario.errores = errores;
+                usuario.resultado = "Error";
+            }
+
+            return usuario;
+        }
+
+        public Resultado BUsuario(Usuarios usuario)
+        {
+            // Se instancia la clase Resultado y se setea la variable en "Ok".
+            Resultado resultado = new Resultado() { resultado = "Ok" };            
+
+            // Se instancia la clase Errores como una lista.
+            List<Errores> errores = new List<Errores>();
+
+
+            try
+            {
+                // Se instancia la clase UsuariosValidator.
+                UsuariosValidator validator = new UsuariosValidator();
+
+                // Se llama al metodo de validacion pasandole como parametros la validacion y la regla de validacion.
+                ValidationResult result = validator.Validate(usuario, ruleSet: "Delete");
+
+                // Si no hay errores en la validacion.
+                if (result.IsValid)
+                {
+                    // Se abre sesion con la Base de Datos.
+                    using (var session = NHibernateHelperDBWorldPizza.OpenSession())
+                    {                      
+
+                        // Se comienza transaccion.
+                        using (var transaction = session.BeginTransaction())
+                        {
+                            try
+                            {
+                                // Se elimina el usuario.
+                                session.Delete(usuario);
+
+                                // Se confirma transaccion.
+                                transaction.Commit();
+                            }
+                            // En caso de haber errores en la baja.
+                            catch
+                            {
+                                // Se vuelve atras la transaccion.
+                                transaction.Rollback();
+
+                                // Se guarda el error.
+                                errores.Add(new Errores { cod_error = "0001", descripcion = "Error en la baja del usuario." });                                
+                                resultado.errores = errores;                                
+                                resultado.resultado = "Error";
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (ValidationFailure detalleError in result.Errors)
+                    {
+                        // Se agrega a la lista el código y detalle del error de validación.
+                        errores.Add(new Errores()
+                        {
+                            cod_error = detalleError.ErrorCode,
+                            descripcion = detalleError.ErrorMessage,
+                            propiedad = detalleError.PropertyName
+                        });
+                    }
+
+                    // Se guardan los errores.
+                    resultado.resultado = "Error";
+                    resultado.errores = errores;
+
+                }
+            }
+            // En caso de haber errores en el proceso.
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });                
+                resultado.errores = errores;                
+                resultado.resultado = "Error";
+            }
+            
+            return resultado;
+        }
+
+        public Resultado MUsuario(Usuarios usuario)
+        {
+            // Se instancia la clase Resultado y se setea la variable en "Ok".
+            Resultado resultado = new Resultado() { resultado = "Ok" };
+
+            // Se instancia la clase Errores como una lista.
+            List<Errores> errores = new List<Errores>();
+
+
+            try
+            {
+                // Se instancia la clase UsuariosValidator
+                UsuariosValidator validator = new UsuariosValidator();
+
+                // Se llama al metodo de validacion pasandole el objeto a validar y la regla de validacion.
+                ValidationResult result = validator.Validate(usuario, ruleSet: "Edit");
+
+                // Si no hubo errores en la validacion.
+                if (result.IsValid)
+                {
+                    // Se abre sesion con la Base de Datos.
+                    using (var session = NHibernateHelperDBWorldPizza.OpenSession())
+                    {
+                        // Se comienza transaccion.
+                        using (var transaction = session.BeginTransaction())
+                        {
+                            try
+                            {
+                                // Se actualizan los datos del usuario.
+                                session.Update(usuario);
+
+                                // Se confirma transaccion.
+                                transaction.Commit();
+                            }
+                            // En caso de haber errores en la actualizacion de datos.
+                            catch
+                            {
+                                // Se vuelve atras la transaccion.
+                                transaction.Rollback();
+
+                                // Se guarda el error.
+                                errores.Add(new Errores { cod_error = "0001", descripcion = "Error en la edicion del usuario." });
+                                resultado.errores = errores;                                
+                                resultado.resultado = "Error";
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (ValidationFailure detalleError in result.Errors)
+                    {
+                        // Se agrega a la lista el código y detalle del error de validación.
+                        errores.Add(new Errores()
+                        {
+                            cod_error = detalleError.ErrorCode,
+                            descripcion = detalleError.ErrorMessage,
+                            propiedad = detalleError.PropertyName
+                        });
+                    }
+
+                    // Se guardan los errores.
+                    resultado.resultado = "Error";
+                    resultado.errores = errores;
+                }
+            }
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse con la base de datos." });                
+                resultado.errores = errores;               
+                resultado.resultado = "Error";
+            }
+           
+            return resultado;
+        }
+        #endregion ABMCUsuarios
+
         #region ABMCProductos
         public List<Productos> CProductos(string filtroBusqueda)
         {
@@ -568,9 +871,6 @@ namespace WebWorldPizza
 
                                 // Se confirma transaccion.
                                 transaction.Commit();
-
-                                
-                                producto.resultado = "Ok";
                             }
                             // En caso de haber errores en la actualizacion de datos.
                             catch
