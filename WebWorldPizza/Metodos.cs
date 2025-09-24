@@ -25,7 +25,83 @@ namespace WebWorldPizza
             }
         }
 
-        
+        public List<Roles> CRoles()
+        {
+            // Instanciamos una lista de objetos.
+            List<Roles> rolesList = new List<Roles>();
+
+            // Instanciamos objeto.
+            Roles rol = new Roles();
+
+            // Instanciamos una lista de Errores.
+            List<Errores> errores = new List<Errores>();
+
+            // Se instancia la clase Errores.
+            Errores error = new Errores();
+
+            try
+            {
+
+                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+
+                    try
+                    {
+
+                        rolesList = sessionDBGestionesMM.QueryOver<Roles>()
+                                                        .List().ToList();
+
+                        
+
+                        // Si la búsqueda no retorna resultados.
+                        if (rolesList.Count == 0)
+                        {
+                            error = new Errores()
+                            {
+                                descripcion = $"No se recupero ningun rol.",
+                                cod_error = "0001"
+                            };
+
+                            errores.Add(error);
+
+                            rol.resultado = "Error";
+                            rol.errores = errores;
+
+                            rolesList.Add(rol);
+
+                        }
+                        else
+                        {
+                            // A cada objeto recuperado le seteamos la variable resultado en "Ok".
+                            foreach (Roles a in rolesList) { a.resultado = "Ok"; }
+                        }
+
+                    }
+                    catch
+                    {
+
+                        // Se guarda el error.
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los roles." });                        
+                        rol.resultado = "Error";
+                        rol.errores = errores;
+                        rolesList.Add(rol);
+
+                    }
+                }
+            }
+            catch
+            {
+
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                rol.errores = errores;               
+                rol.resultado = "Error";
+                rolesList.Add(rol);
+
+            }
+
+            return rolesList;
+        }
 
         public List<UsuariosRoles> CUsuarioRoles(string usuario)
         {

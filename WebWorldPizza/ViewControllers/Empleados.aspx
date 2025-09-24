@@ -11,7 +11,7 @@
     <div id="modal"></div>
 
    
-    <!-- Pedidos -->
+    <!-- Empleados -->
     <template id="bodyPrincipal">       
         <div>
             <div id="contenedorLinkAlta" class="btn-link"></div>

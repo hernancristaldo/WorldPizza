@@ -73,6 +73,14 @@ namespace WebWorldPizza
                         context.Response.Write(JsonConvert.SerializeObject(MEmpleado(requestData)));
                         break;
 
+                    case "CRoles":
+                        context.Response.Write(JsonConvert.SerializeObject(CRoles()));
+                        break;
+
+                    case "CUsuarios":
+                        context.Response.Write(JsonConvert.SerializeObject(CUsuarios(requestData)));
+                        break;
+
                     default:
                         throw new ArgumentException("Solicitud no válida");
                 }
@@ -223,6 +231,16 @@ namespace WebWorldPizza
         private Resultado BEmpleado(RequestData data)
         {
             return metodo.BEmpleado(data.id_empleado);
+        }
+
+        private List<Roles> CRoles()
+        {
+            return metodo.CRoles();
+        }
+
+        private List<Usuarios> CUsuarios(RequestData data)
+        {
+            return metodo.CUsuarios(data.filtroBusqueda, null);
         }
 
         public bool IsReusable => false;
