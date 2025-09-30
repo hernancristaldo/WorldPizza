@@ -1,0 +1,111 @@
+﻿.tag {
+    display: none;
+    background: white;
+}
+
+    .tag.actived {
+        display: inline-block;
+        border-radius: 7px;
+        border: 1px solid silver;
+        height: 40px;
+        margin: 8px 2px;
+    }
+
+    .tag.actived-selected {
+        display: inline-block;
+        border-radius: 7px;
+        border: 1px solid green;
+        margin: 2px;
+        background-color: green;
+    }
+
+        .tag.actived-selected .tag__remove {
+            color: white;
+        }
+
+        .tag.actived-selected span {
+            color: white;
+        }
+
+.tag__value {
+    display: inline-block;
+    color: black;
+    margin-right: -5px;
+    padding: 9px;
+}
+
+.tag__remove {
+    display: inline-block;
+    color: black;
+    padding: 9px;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+}
+
+    .tag__remove:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+.multiselect__checkboxes {
+    display: none;
+}
+
+.multiselect__field {
+    dth: 100%;
+    min-height: 50px;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 10px 22px 9px 22px;
+    background-color: #fff;
+    border: 1px solid #ccd0d2;
+    border-radius: 4px;
+}
+
+.multiselect__dropdown {
+    display: none;
+}
+
+    .multiselect__dropdown.active {
+        display: block;
+        position: absolute;
+    }
+
+.multiselect__dropdown__close {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.multiselect__dropdown__list {
+    position: relative;
+    top: 5px;
+    border: 1px solid #ccd0d2;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-sizing: border-box;
+    background-color: #fff;
+    border-radius: 4px;
+    overflow-y: scroll;
+    max-height: 200px;
+}
+
+    .multiselect__dropdown__list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .multiselect__dropdown__list li {
+        padding: 15px;
+        border: 1px solid transparent;
+        cursor: pointer;
+        display: block;
+        color: black;
+    }
+
+        .multiselect__dropdown__list li.active {
+            color: white;
+            background-color: var(--primary-color);
+        }

@@ -6,6 +6,7 @@ import Tabla from '/js/Utilidades/Tabla.js';
 import Alert from '/js/Utilidades/Alert.js';
 import Spinner from '/js/Utilidades/Spinner.js';
 import Toast from '/js/Utilidades/Toast.js';
+import Multiselect from '/js/Utilidades/Multiselect.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     new UsuariosIndex();
@@ -580,6 +581,7 @@ class AltaUsuario {
         this.asyncFetch = new AsyncFetch();
         this.usuarios = usuarios;
         this.roles = roles;
+        this.empleados = [];
 
         this.main();
     }
@@ -587,7 +589,30 @@ class AltaUsuario {
         this.token = await InstanciaCry.decSer(sessionStorage.getItem('tkn'));
         this.llenarModal();
     }
-    llenarModal() {
+    async getEmpleados() {
+
+        // Se obtienen los empleados.
+        const response = await this.asyncFetch.fetch({
+            url: '/Controller.ashx',
+            body: {
+                accion: "CEmpleados",
+                filtroBusqueda: ""
+            },
+            headers: {
+                'X-CSRF-Token': this.token
+            }
+        });
+
+        if (response[0].resultado === "Ok") {
+
+            // Solo se mantienen los que estan activos.
+            let empleadosActivos = response.filter(e => e.fecha_baja === null);
+            return empleadosActivos;
+        }
+
+        return [];
+    }
+    async llenarModal() {
         // Clonar el contenido del template
         const clone = document.querySelector("#bodyAlta").content.cloneNode(true);
         document.querySelector("#modal").innerHTML = "";
@@ -599,10 +624,15 @@ class AltaUsuario {
             titulo: "Alta de Usuario"
         });
 
-        this.evtClick();
-        this.llenarRoles();
+        this.empleados = await this.getEmpleados();
+        this.llenarListaEmpleados();
+        this.insertarMultiselect(this.roles);
 
-       
+        this.evtClick();
+        this.evtChangeEmpleados();
+        
+
+        this.modal.ocultarSpinner();
     }
     evtClick() {
 
@@ -612,9 +642,8 @@ class AltaUsuario {
 
             if (elem === "btnGuardar") {
 
-                //this.modal.mostrarSpinner();
-                //this.guardarEmpleado();
-                new Toast({ mensaje: "Funcion en desarrollo", type: "error" });
+                this.modal.mostrarSpinner();
+                this.guardarUsuarioRoles();
             }
             else if (elem === "cerrarModal") {
 
@@ -623,58 +652,160 @@ class AltaUsuario {
             }
         });
     }
-    llenarRoles() {
+    evtChangeEmpleados() {
+        document.querySelector("#inputList").addEventListener('change', e => {
 
-        let selectRoles = document.getElementById('roles');
+            const value = document.querySelector("#inputList").value;
 
-        
+            const [empleado] = this.empleados.filter(e => e.apellido_nombre === value);
 
-        // Se crean las opciones.
-        let option = document.createElement("option");
-        option.value = "0";
-        option.innerHTML = "";
-        selectRoles.appendChild(option);
-
-        this.roles.forEach(({ nombre, id }) => {
-
-            let option = document.createElement("option");
-            option.innerHTML = nombre;
-            option.value = id;
-            selectRoles.appendChild(option);
+            document.querySelector("#usuario").value = empleado !== undefined ? empleado.usuario_abm : "";
 
         });
-
-        this.modal.ocultarSpinner();
     }
-    recuperarDatos() {
+    llenarListaEmpleados() {
+
+        // Se completa la datalist de empleados.
+        let dataList = document.getElementById('listEmpleados');
+        const options = dataList.getElementsByTagName('option');
+
+        for (let i = options.length - 1; i >= 0; i--) {
+            dataList.removeChild(options[i]);
+        }
+
+        this.empleados.forEach(({ apellido_nombre, id }) => {
+            let option = document.createElement("option");
+            option.value = apellido_nombre;
+            option.dataset.id = id;
+            dataList.appendChild(option);
+        });
+
+        return;
+    }
+    insertarMultiselect(roles) {
+
+        let array = [];
+
+        let rolesMultiselect = JSON.parse(JSON.stringify(roles));
+
+        // Se agrega un atributo 'value' para poder usar el multiselect.
+        if (rolesMultiselect.length > 0) {
+            rolesMultiselect.forEach(elem => {
+                elem.value = elem.id;
+                elem.nombre = elem.nombre;
+            });
+        }      
+
+        // Se limpia el contenedor.
+        document.querySelector("#contenedor").innerHTML = "";
+
+        // Se instancia el multiselect y se pasa el listado de articulos.
+        this.multiselect = new Multiselect({
+            elementosActivos: array,
+            elementosTotal: rolesMultiselect,
+            nombreContenedorActivos: "contenedor"
+        });
+                
+
+        // Se inserta el multiselect.
+        this.multiselect.sub('getHtml', data => {
+            document.querySelector("#contenedor").appendChild(data);
+        });
+
+        // Se actualizan los articulos disponibles.
+        this.multiselect.sub('getActivos', data => {
+            this.actualizarArrayActivosMultiselect(data);
+        });
+
+        return;
+    }
+    actualizarArrayActivosMultiselect(seleccionados) {
+
+        
+        
+        let rolesMultiselect = JSON.parse(JSON.stringify(this.roles));
+
+        if (seleccionados.length > 0) {
+
+            seleccionados.forEach(elem => {
+                const value = elem.value;
+                rolesMultiselect = rolesMultiselect.filter(e => e.id !== parseInt(value));
+            });
+        }
+
+        if (rolesMultiselect.length > 0) {
+            rolesMultiselect.forEach(elem => {
+                elem.value = elem.id;
+            });
+        }
+        
+
+        this.multiselect.actualizarElementosTotal({ elementosTotal: rolesMultiselect });
+    }
+    recuperarRoles() {
+
+        let rolesAsignados = [];
+
+        // Se recuperan todas las etiquetas nuevas.
+        const contenedor = document.querySelector("#contenedor");
+        let etiquetas = contenedor.querySelectorAll('.tag.actived');
+
+        // Por cada etiqueta se recupera el articulo correspondiente.
+        etiquetas.forEach((elem) => {
+            const id_rol = parseInt(elem.getAttribute('data-value'));
+            //const nombre = elem.children[0].textContent;
+
+            let [rol] = this.roles.filter(r => r.id === id_rol);
+
+            rolesAsignados.push(rol);
+        });
+
+        return rolesAsignados;
+    }
+    async recuperarDatos() {
+
+        const roles = await this.recuperarRoles();      
+
+        const nombre_empleado = document.querySelector("#inputList").value;
+        const [empleado] = this.empleados.filter(e => e.apellido_nombre === nombre_empleado);
+
+        if (empleado === undefined) {
+            new Toast({ mensaje: "Debe seleccionar un empleado.", type: "error" });
+            return null;
+        }
 
         // Se recupera el valor de los campos completados.      
         const obj = {
-            dni: document.querySelector("#dni").value,
-            apellido_nombre: document.querySelector("#nombre").value,
-            mail: document.querySelector("#mail").value,
-            domicilio: document.querySelector("#domicilio").value,
-            nro_telefono: document.querySelector("#telefono").value,
-            usuario_abm: document.querySelector("#usuario").value
+            empleado: empleado,
+            usuario: document.querySelector("#usuario").value,
+            pass: document.querySelector("#pass").value
         };
 
         // Se crea un objeto para guardar los datos obtenidos.
-        const data = {
-            accion: "AEmpleado",
-            empleado: obj
+        const data = {            
+            usuario: obj,
+            roles: roles
         };
 
         return data;
     }
-    async guardarEmpleado() {
+    async guardarUsuarioRoles() {
 
         // Recuperamos los campos.        
         const data = await this.recuperarDatos();
+        if (data === null) return;
+
+        console.log(data);
+
+        
 
         // Se realiza el alta del empleado.
         const response = await this.asyncFetch.fetch({
             url: "/Controller.ashx",
-            body: data,
+            body: {
+                accion: "AUsuario",
+                usuario: data.usuario
+            },
             headers: {
                 'X-CSRF-Token': this.token
             }
@@ -695,16 +826,55 @@ class AltaUsuario {
             this.limpiarErrores();
 
             // Se agrega el producto al array.
-            this.empleados.push(response);
+            this.usuarios.push(response);
 
             // Si no hubo errores en el alta.
-            new Alert({ mensaje: 'Empleado guardado correctamente.', title: "Exito", type: "success" });
+            new Toast({ mensaje: "Usuario creado correctamente.", type: "success" });
 
             // Se limpia el formulario.
             const inputs = document.querySelectorAll('[data-editable="true"]');
             inputs.forEach(elem => {
                 elem.value = "";
             });
+
+            document.querySelector("#contenedor").innerHTML = "";
+
+            if (data.roles.length !== 0) {
+                this.guardarUsuarioRoles(data.roles, response);
+            }
+        }
+
+        return;
+    }
+    async guardarUsuarioRoles(roles, usuario) {
+
+        // Se realiza el alta del empleado.
+        const response = await this.asyncFetch.fetch({
+            url: "/Controller.ashx",
+            body: {
+                accion: "AUsuarioRoles",
+                usuario: usuario,
+                roles: roles
+            },
+            headers: {
+                'X-CSRF-Token': this.token
+            }
+        });
+
+        const { resultado, errores } = Array.isArray(response) ? response[0] : response;        
+
+        if (resultado !== "Ok") {
+
+            this.limpiarErrores();
+            this.mostrarErrores(errores);
+            return;
+        }
+        else {
+
+            this.limpiarErrores();
+            
+            // Si no hubo errores en el alta.
+            new Toast({ mensaje: "Roles asignados correctamente.", type: "success" });            
         }
 
         return;

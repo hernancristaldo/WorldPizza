@@ -13,6 +13,9 @@ namespace WebWorldPizza.Validators
             // Si se quiere validar un alta.
             RuleSet("Create", () =>
             {
+                RuleFor(p => p.empleado.id).Cascade(CascadeMode.StopOnFirstFailure)
+                                   .NotEmpty().WithMessage("El empleado es obligatorio.").WithErrorCode("0001")
+                                   .Must(CEmpleado).WithMessage("El empleado no existe.").WithErrorCode("0001");
                 RuleFor(p => p.usuario).Cascade(CascadeMode.StopOnFirstFailure)
                                    .NotEmpty().WithMessage("El usuario es obligatorio.").WithErrorCode("0001")
                                    .Must(CUsuario).WithMessage("El usuario ya existe.").WithErrorCode("0001");
@@ -29,6 +32,9 @@ namespace WebWorldPizza.Validators
             // Si se quiere validar una edicion.
             RuleSet("Edit", () =>
             {
+                RuleFor(p => p.empleado.id).Cascade(CascadeMode.StopOnFirstFailure)
+                                  .NotEmpty().WithMessage("El empleado es obligatorio.").WithErrorCode("0001")
+                                  .Must(CEmpleado).WithMessage("El empleado no existe.").WithErrorCode("0001");
                 RuleFor(p => p.usuario).Cascade(CascadeMode.StopOnFirstFailure)
                                    .NotEmpty().WithMessage("El usuario es obligatorio.").WithErrorCode("0001")
                                    .Must(CUsuario).WithMessage("El usuario ya existe.").WithErrorCode("0001");
@@ -60,6 +66,30 @@ namespace WebWorldPizza.Validators
             List<UsuariosRoles> usuariosRoles = metodo.CUsuarioRoles(usuario);
 
             if (usuariosRoles[0].resultado == "Ok") result = false;
+
+            return result;
+        }
+
+        // Se verifica si el empleado existe.
+        private bool CEmpleado(int id_empleado)
+        {
+            bool result = true;            
+
+            try
+            {
+                using(var session = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    Empleados empleado = session.QueryOver<Empleados>()
+                                       .Where(m => m.id == id_empleado)
+                                       .SingleOrDefault();
+
+                    if (empleado == null) result = false;
+                }
+            }
+            catch
+            {
+                result = false;
+            }
 
             return result;
         }

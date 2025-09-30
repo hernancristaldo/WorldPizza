@@ -77,28 +77,29 @@
     <template id="bodyAlta">
         <div>            
             <div class="contenedor-generico">
-                <div class="formulario-2">                    
+                <div class="formulario-3">                    
                     <div class="formulario__grupo">   
                         <label class="formbold-form-label">Empleado</label>
-                        <input list="listEmpleados" id="inputList"/>
+                        <input list="listEmpleados" id="inputList" data-editable="true"/>
                         <datalist id="listEmpleados"></datalist>
                     </div>
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">Usuario</label>
-                        <input type="text" id="usuario" class="formbold-form-input" data-validate="usuario" data-editable="true" required/>   
+                        <input type="text" id="usuario" class="formbold-form-input" data-validate="usuario" data-editable="true" required disabled/>   
                         <div class="individual-errores"></div>
                     </div>                    
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">Pass</label>
                         <input type="text" id="pass" class="formbold-form-input" data-validate="pass" data-editable="true" required/> 
                         <div class="individual-errores"></div>
-                    </div>     
-                    <div class="formulario__grupo">
-                        <label class="formbold-form-label">Rol</label>
-                        <select id="roles" data-editable="true"></select>
-                    </div>
+                    </div> 
                 </div>
-                       
+                
+                
+                 <div class="titulo-generico"> Roles a asignar </div>
+                 <div class="contenedor-generico">
+                     <div id="contenedor"></div>                 
+                 </div> 
                 
                 <button data-element="btnGuardar" class="custom-btn-guardar" type="button">Guardar</button>
             </div>

@@ -136,10 +136,12 @@
     <Content Include="Content\Styles\Alert.css" />
     <Content Include="Content\Styles\Buttons.css" />
     <Content Include="Content\Styles\Formulario.css" />
+    <Content Include="Content\Styles\FormularioSmall.css" />
     <Content Include="Content\Styles\Generales.css" />
     <Content Include="Content\Styles\Login.css" />
     <Content Include="Content\Styles\Masterpage.css" />
     <Content Include="Content\Styles\Modal.css" />
+    <Content Include="Content\Styles\Multiselect.css" />
     <Content Include="Content\Styles\Notificaciones.css" />
     <Content Include="Content\Styles\Principal.css" />
     <Content Include="Content\Styles\Spinner.css" />
@@ -165,6 +167,7 @@
     <Content Include="js\Productos.js" />
     <Content Include="js\Usuarios.js" />
     <Content Include="js\Utilidades\Cry.js" />
+    <Content Include="js\Utilidades\Multiselect.js" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.MenusRoles.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.Usuarios.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.UsuariosRoles.datasource" />
@@ -273,6 +276,7 @@
     </Compile>
     <Compile Include="Validators\EmpleadosValidator.cs" />
     <Compile Include="Validators\ProductosValidator.cs" />
+    <Compile Include="Validators\UsuariosRolesValidator.cs" />
     <Compile Include="Validators\UsuariosValidator.cs" />
     <Compile Include="ViewControllers\Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>

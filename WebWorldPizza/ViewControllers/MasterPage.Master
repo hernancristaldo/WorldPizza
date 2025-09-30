@@ -40,12 +40,12 @@
     <link href="/Content/Styles/Switch.css" rel="stylesheet" />
     <%--<link href="/Content/style/Pestanas.css" rel="stylesheet" />--%>
     <link href="/Content/Styles/Formulario.css" rel="stylesheet" />
-    <%--<link href="/Content/style/Multiselect.css" rel="stylesheet" />--%>
+    <link href="/Content/Styles/Multiselect.css" rel="stylesheet" />
     
     <link href="/Content/Styles/Buttons.css" rel="stylesheet" />
     <link href="/Content/Styles/Alert.css" rel="stylesheet" />
     <link href="/Content/Styles/Toast.css" rel="stylesheet" />
-    <%--<link href="/Content/style/FormularioSmall.css" rel="stylesheet" />--%>
+    <link href="/Content/Styles/FormularioSmall.css" rel="stylesheet" />
     
     <link href="/Content/Styles/Notificaciones.css" rel="stylesheet" />
 

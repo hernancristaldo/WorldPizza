@@ -101,99 +101,7 @@ namespace WebWorldPizza
             }
 
             return rolesList;
-        }
-
-        public List<UsuariosRoles> CUsuarioRoles(string usuario)
-        {
-            // Instanciamos una lista de objetos.
-            List<UsuariosRoles> usuarioRolesList = new List<UsuariosRoles>();
-
-            // Instanciamos objeto.
-            UsuariosRoles rol = new UsuariosRoles();
-
-            // Instanciamos una lista de Errores.
-            List<Errores> errores = new List<Errores>();
-
-            // Se instancia la clase Errores.
-            Errores error = new Errores();            
-
-            try
-            {
-
-                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
-                {
-
-                    try
-                    {
-
-                        var query = sessionDBGestionesMM.QueryOver<UsuariosRoles>()
-                                                        .Where(a => a.usuario.usuario != "");
-
-                        if (usuario != "") query.And(a => a.usuario.usuario.IsLike(usuario, MatchMode.Exact));
-
-                        usuarioRolesList = new List<UsuariosRoles>(query.List());
-
-                        // Si la búsqueda no retorna resultados.
-                        if (usuarioRolesList.Count == 0)
-                        {
-                            error = new Errores()
-                            {
-                                descripcion = $"No se recupero ningun rol para el usuario.",
-                                cod_error = "0001"
-                            };
-
-                            errores.Add(error);
-
-                            rol.resultado = "Error";
-                            rol.errores = errores;
-
-                            usuarioRolesList.Add(rol);
-
-                        }
-                        else
-                        {
-                            // A cada objeto recuperado le seteamos la variable resultado en "Ok".
-                            foreach (UsuariosRoles a in usuarioRolesList) { a.resultado = "Ok"; }
-                        }                       
-
-                    }                    
-                    catch
-                    {
-
-                        // Se llama al método que realiza el registro de errores
-                        // y se agrega a la lista de errores el objeto devuelto por el método.
-                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los roles del usuario."});
-
-                        // Se setea la variable 'resultado' en "Error"
-                        rol.resultado = "Error";
-
-                        rol.errores = errores;
-
-                        usuarioRolesList.Add(rol);
-
-                    }
-
-                }
-            }
-            catch
-            {
-
-                // Se llama al método que realiza el registro de errores
-                // y se agrega a la lista de errores el objeto devuelto por el método.
-                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos."});
-
-                rol.errores = errores;
-
-                // Se setea la variable 'resultado' en "Error".
-                rol.resultado = "Error";
-
-                usuarioRolesList.Add(rol);
-
-            }
-
-            return usuarioRolesList;
-
-        }
+        }       
 
         public List<PantallasRoles> CPantallasRoles(int? id_rol)
         {
@@ -1430,6 +1338,177 @@ namespace WebWorldPizza
             return resultado;
         }
         #endregion ABMCEmpleados
+
+        #region ABMCUsuariosRoles
+        public List<UsuariosRoles> CUsuarioRoles(string usuario)
+        {
+            // Instanciamos una lista de objetos.
+            List<UsuariosRoles> usuarioRolesList = new List<UsuariosRoles>();
+
+            // Instanciamos objeto.
+            UsuariosRoles rol = new UsuariosRoles();
+
+            // Instanciamos una lista de Errores.
+            List<Errores> errores = new List<Errores>();
+
+            // Se instancia la clase Errores.
+            Errores error = new Errores();
+
+            try
+            {
+
+                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+
+                    try
+                    {
+
+                        var query = sessionDBGestionesMM.QueryOver<UsuariosRoles>()
+                                                        .Where(a => a.usuario.usuario != "");
+
+                        if (usuario != "") query.And(a => a.usuario.usuario.IsLike(usuario, MatchMode.Exact));
+
+                        usuarioRolesList = new List<UsuariosRoles>(query.List());
+
+                        // Si la búsqueda no retorna resultados.
+                        if (usuarioRolesList.Count == 0)
+                        {
+                            error = new Errores()
+                            {
+                                descripcion = $"No se recupero ningun rol para el usuario.",
+                                cod_error = "0001"
+                            };
+
+                            errores.Add(error);
+
+                            rol.resultado = "Error";
+                            rol.errores = errores;
+
+                            usuarioRolesList.Add(rol);
+
+                        }
+                        else
+                        {
+                            // A cada objeto recuperado le seteamos la variable resultado en "Ok".
+                            foreach (UsuariosRoles a in usuarioRolesList) { a.resultado = "Ok"; }
+                        }
+
+                    }
+                    catch
+                    {
+
+                        // Se llama al método que realiza el registro de errores
+                        // y se agrega a la lista de errores el objeto devuelto por el método.
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los roles del usuario." });
+
+                        // Se setea la variable 'resultado' en "Error"
+                        rol.resultado = "Error";
+
+                        rol.errores = errores;
+
+                        usuarioRolesList.Add(rol);
+
+                    }
+
+                }
+            }
+            catch
+            {
+
+                // Se llama al método que realiza el registro de errores
+                // y se agrega a la lista de errores el objeto devuelto por el método.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+
+                rol.errores = errores;
+
+                // Se setea la variable 'resultado' en "Error".
+                rol.resultado = "Error";
+
+                usuarioRolesList.Add(rol);
+
+            }
+
+            return usuarioRolesList;
+
+        }
+
+        public UsuariosRoles AUsuarioRol(UsuariosRoles usuarioRol)
+        {
+            // Se instancia la clase Errores como una lista.
+            List<Errores> errores = new List<Errores>();
+
+            try
+            {
+                // Se instancia la clase UsuariosRolesValidator.
+                UsuariosRolesValidator validator = new UsuariosRolesValidator();
+
+                // Se llama al metodo de validacion pasandole como parametros la validacion y regla a validar.
+                ValidationResult result = validator.Validate(usuarioRol, ruleSet: "Create");
+
+                // Si no hubo errores en la validacion.
+                if (result.IsValid)
+                {
+                    // Se abre session con la Base de Datos.
+                    using (var session = NHibernateHelperDBWorldPizza.OpenSession())
+                    {                       
+
+                        // Se abre transaccion.
+                        using (var transaction = session.BeginTransaction())
+                        {
+                            try
+                            {
+                                // Se guarda la usuarioRol en la Base de Datos y se recupera el id generado.
+                                usuarioRol.id = (int)session.Save(usuarioRol);
+
+                                // Se confirma transaccion.
+                                transaction.Commit();
+
+                                usuarioRol.resultado = "Ok";
+                            }
+                            // Si hubo errores en el alta de la Marca.
+                            catch
+                            {
+                                // Se vuelve atras la transaccion.
+                                transaction.Rollback();
+
+                                // Se guarda el error.
+                                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al dar de alta el rol para el usuario." });
+                                usuarioRol.errores = errores;
+                                usuarioRol.resultado = "Error";
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (ValidationFailure detalleError in result.Errors)
+                    {
+                        // Se agrega a la lista el código y detalle del error de validación.
+                        errores.Add(new Errores()
+                        {
+                            cod_error = detalleError.ErrorCode,
+                            descripcion = detalleError.ErrorMessage,
+                            propiedad = detalleError.PropertyName
+                        });
+                    }
+
+                    // Se guardan los errores.
+                    usuarioRol.resultado = "Error";
+                    usuarioRol.errores = errores;
+                }
+            }
+            catch
+            {
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                usuarioRol.errores = errores;
+                usuarioRol.resultado = "Error";
+            }
+
+
+            return usuarioRol;
+        }
+       
+        #endregion ABMCUsuariosRoles
 
     }
 }

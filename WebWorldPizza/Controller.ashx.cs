@@ -81,6 +81,14 @@ namespace WebWorldPizza
                         context.Response.Write(JsonConvert.SerializeObject(CUsuarios(requestData)));
                         break;
 
+                    case "AUsuario":
+                        context.Response.Write(JsonConvert.SerializeObject(AUsuario(requestData)));
+                        break;
+
+                    case "AUsuarioRoles":
+                        context.Response.Write(JsonConvert.SerializeObject(AUsuarioRoles(requestData)));
+                        break;
+
                     default:
                         throw new ArgumentException("Solicitud no válida");
                 }
@@ -152,7 +160,8 @@ namespace WebWorldPizza
             public int id_producto { get; set; }
             public Empleados empleado { get; set; }
             public int id_empleado { get; set; }
-            
+            public List<Roles> roles { get; set; }
+            public Usuarios usuario { get; set; }
         }
 
         private bool IsAuthorized(HttpRequest request)
@@ -241,6 +250,65 @@ namespace WebWorldPizza
         private List<Usuarios> CUsuarios(RequestData data)
         {
             return metodo.CUsuarios(data.filtroBusqueda, null);
+        }
+
+        private Usuarios AUsuario(RequestData data)
+        {
+            return metodo.AUsuario(data.usuario);
+        }
+
+        private Resultado AUsuarioRoles(RequestData data)
+        {
+            Resultado resultado = new Resultado();
+            List<Errores> errores = new List<Errores>();            
+
+            try
+            {
+                if(data.roles.Count() != 0)
+                {
+                    foreach(Roles rol in data.roles)
+                    {
+                        var usuarioRol = new UsuariosRoles {
+                            rol = rol,
+                            usuario = data.usuario
+                        };
+
+                        UsuariosRoles newUsuarioRol = metodo.AUsuarioRol(usuarioRol);
+
+                        if(newUsuarioRol.resultado != "Ok")
+                        {
+                            foreach(Errores error in newUsuarioRol.errores)
+                            {
+                                errores.Add(error);
+                            }
+                        }
+                    }
+
+                    if(errores.Count() == 0)
+                    {
+                        resultado.resultado = "Ok";
+                    }
+                    else
+                    {
+                        resultado.resultado = "Error";
+                        resultado.errores = errores;
+                    }
+                }
+                else
+                {
+                    errores.Add(new Errores { cod_error = "0001", descripcion = "No hay roles para asignar al usuario." });
+                    resultado.errores = errores;
+                    resultado.resultado = "Error";
+                }
+            }
+            catch
+            {
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar dar de alta el rol para el usuario." });
+                resultado.errores = errores;
+                resultado.resultado = "Error";
+            }
+
+            return resultado;
         }
 
         public bool IsReusable => false;
