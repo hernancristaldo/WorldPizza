@@ -9,6 +9,7 @@
     <!-- Principal -->
     <div id="principal"></div>
     <div id="modal"></div>
+    <div id="modalMini"></div>
 
    
     <!-- Usuarios -->
@@ -36,17 +37,18 @@
 
     <template id="bodyEdicion">
         <div>       
-            <div class="contenedor-doble">
-                <div class="contenedor-principal">                
-                    <div id="resetModal"></div>
-                </div>
-                <div class="contenedor-secundario">
-                    <div class="margin-10" style="display: flex; justify-content: flex-end" id="switchEdicion"></div>
-                </div>
-            </div>            
-
+                        
+            <div class="titulo-generico">Detalle</div>
             <div class="contenedor-generico">
-                <div class="formulario-2">
+                <div class="contenedor-doble">
+                    <div class="contenedor-principal">                
+                        <div id="resetModal"></div>
+                    </div>
+                    <div class="contenedor-secundario">
+                        <div class="margin-10" style="display: flex; justify-content: flex-end" id="switchEdicion"></div>
+                    </div>
+                </div>
+                <div class="formulario-3">
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">Empleado</label>
                         <input type="text" id="editEmpleado" class="formbold-form-input" disabled />  
@@ -60,19 +62,34 @@
                         <label class="formbold-form-label">Pass</label>
                         <input type="text" id="editPass" class="formbold-form-input" data-validate="pass" data-editable="true" required disabled/>                    
                         <div class="individual-errores"></div>
-                    </div>  
-                    <div class="formulario__grupo">
-                        <label class="formbold-form-label">Rol</label>
-                        <select id="editRoles" data-editable="true"></select>
-                    </div>
-                </div>
-                 
-            </div>         
-
-            <button data-element="btnGuardar" style="display:none" class="custom-btn-guardar" type="button">Editar</button>        
-            <button data-element="btnEliminar" style="display:none" class="custom-btn-guardar" type="button">Eliminar</button>
+                    </div>                      
+                </div>       
+                <button data-element="btnGuardar" style="display:none" class="custom-btn-guardar" type="button">Editar</button>        
+                <button data-element="btnEliminar" style="display:none" class="custom-btn-guardar" type="button">Eliminar</button>
+            </div>     
+            
+            <div class="titulo-generico">Roles</div>            
+            <div class="contenedor-generico">
+                <div id="contenedorLinkRoles" class="btn-link"></div>
+                <div id="tablaRoles"></div>
+                <button data-element="btnQuitar" style="display:none" class="custom-btn-guardar" type="button">Quitar</button>
+            </div>            
         </div>        
     </template>
+
+
+    <template id="bodyMultiselect">
+        <div>
+            <div class="titulo-generico"> Roles a asignar </div>
+            <div class="contenedor-generico">
+                <div id="spinnerMultiselect">
+                     <div id="contenedorNuevoRol"></div>
+                 </div>                  
+            </div> 
+            <button data-element="btnGuardarRol" type="button" class="custom-btn-guardar">Guardar</button>
+        </div>
+    </template>
+
 
     <template id="bodyAlta">
         <div>            
@@ -85,7 +102,7 @@
                     </div>
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">Usuario</label>
-                        <input type="text" id="usuario" class="formbold-form-input" data-validate="usuario" data-editable="true" required disabled/>   
+                        <input type="text" id="usuario" class="formbold-form-input" data-validate="usuario" data-editable="true" required />   
                         <div class="individual-errores"></div>
                     </div>                    
                     <div class="formulario__grupo">
@@ -105,6 +122,8 @@
             </div>
         </div>
     </template>
+
+
     
 
     <script type="module" src="/js/Usuarios.js"></script>

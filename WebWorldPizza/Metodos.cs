@@ -1472,7 +1472,7 @@ namespace WebWorldPizza
                                 transaction.Rollback();
 
                                 // Se guarda el error.
-                                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al dar de alta el rol para el usuario." });
+                                errores.Add(new Errores { cod_error = "0001", descripcion = $"Error al dar de alta el rol '{usuarioRol.rol.nombre}' para el usuario." });
                                 usuarioRol.errores = errores;
                                 usuarioRol.resultado = "Error";
                             }
@@ -1507,7 +1507,57 @@ namespace WebWorldPizza
 
             return usuarioRol;
         }
-       
+
+        public Resultado BUsuarioRol(UsuariosRoles usuarioRol)
+        {
+            // Se instancia la clase Resultado y se setea la variable en "Ok".
+            Resultado resultado = new Resultado() { resultado = "Ok" };
+
+            // Se instancia la clase Errores como una lista.
+            List<Errores> errores = new List<Errores>();
+
+            try
+            {
+                // Se abre sesion con la Base de Datos.
+                using (var session = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    // Se comienza transaccion.
+                    using (var transaction = session.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Se elimina el rol del usuario.
+                            session.Delete(usuarioRol);
+
+                            // Se confirma transaccion.
+                            transaction.Commit();
+                        }
+                        // En caso de haber errores en la baja.
+                        catch
+                        {
+                            // Se vuelve atras la transaccion.
+                            transaction.Rollback();
+
+                            // Se guarda el error.
+                            errores.Add(new Errores { cod_error = "0001", descripcion = "Error en la baja del rol del usuario." });
+                            resultado.errores = errores;
+                            resultado.resultado = "Error";
+                        }
+                    }
+                }
+            }
+            // En caso de haber errores en el proceso.
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                resultado.errores = errores;
+                resultado.resultado = "Error";
+            }
+
+            return resultado;
+        }
+
         #endregion ABMCUsuariosRoles
 
     }

@@ -85,8 +85,24 @@ namespace WebWorldPizza
                         context.Response.Write(JsonConvert.SerializeObject(AUsuario(requestData)));
                         break;
 
+                    case "MUsuario":
+                        context.Response.Write(JsonConvert.SerializeObject(MUsuario(requestData)));
+                        break;
+
+                    case "BUsuario":
+                        context.Response.Write(JsonConvert.SerializeObject(BUsuario(requestData)));
+                        break;
+
                     case "AUsuarioRoles":
                         context.Response.Write(JsonConvert.SerializeObject(AUsuarioRoles(requestData)));
+                        break;
+
+                    case "CUsuarioRoles":
+                        context.Response.Write(JsonConvert.SerializeObject(CUsuarioRoles(requestData)));
+                        break;
+
+                    case "BUsuarioRol":
+                        context.Response.Write(JsonConvert.SerializeObject(BUsuarioRol(requestData)));
                         break;
 
                     default:
@@ -162,6 +178,7 @@ namespace WebWorldPizza
             public int id_empleado { get; set; }
             public List<Roles> roles { get; set; }
             public Usuarios usuario { get; set; }
+            public UsuariosRoles usuarioRol { get; set; }
         }
 
         private bool IsAuthorized(HttpRequest request)
@@ -257,6 +274,16 @@ namespace WebWorldPizza
             return metodo.AUsuario(data.usuario);
         }
 
+        private Resultado MUsuario(RequestData data)
+        {
+            return metodo.MUsuario(data.usuario);
+        }
+
+        private Resultado BUsuario(RequestData data)
+        {
+            return metodo.BUsuario(data.usuario);
+        }
+
         private Resultado AUsuarioRoles(RequestData data)
         {
             Resultado resultado = new Resultado();
@@ -287,6 +314,7 @@ namespace WebWorldPizza
                     if(errores.Count() == 0)
                     {
                         resultado.resultado = "Ok";
+                        resultado.errores = errores;
                     }
                     else
                     {
@@ -309,6 +337,16 @@ namespace WebWorldPizza
             }
 
             return resultado;
+        }
+
+        private List<UsuariosRoles> CUsuarioRoles(RequestData data)
+        {
+            return metodo.CUsuarioRoles(data.filtroBusqueda);
+        }
+
+        private Resultado BUsuarioRol(RequestData data)
+        {
+            return metodo.BUsuarioRol(data.usuarioRol);
         }
 
         public bool IsReusable => false;

@@ -123,7 +123,7 @@
             }
             else if (element === "quitarActivo") {
                 const elemAEliminar = e.target.parentElement.dataset.value;
-                this.elementosActivos = this.elementosActivos.filter(elem => elem.value !== parseInt(elemAEliminar));
+                this.elementosActivos = this.elementosActivos.filter(elem => elem.value.toString() !== elemAEliminar);
                 e.target.parentElement.remove();
 
                 this.pub('getActivos', this.elementosActivos);
@@ -144,13 +144,13 @@
                 const activos = document.querySelectorAll(`#modal-mini-${this.nombreContenedorActivos} .activ`);
                 const activosAdd = Array.from(activos).map(elem =>
                 ({
-                    value: parseInt(elem.dataset.value),
+                    value: elem.dataset.value,
                     nombre: elem.innerHTML,
                     data: elem.dataset.data
                 }));
 
                 activosAdd.forEach(item => {
-                    const existe = this.elementosActivos.some(elem => elem.value === item.value);
+                    const existe = this.elementosActivos.some(elem => elem.value.toString() === item.value);
                     if (!existe) {
                         this.elementosActivos.push(item);
                     }

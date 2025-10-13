@@ -8,7 +8,7 @@
         this.modalHtml = `
           <div class="custom-modal">
             <div class="custom-modal-content-small">
-              <span class="custom-modal-close-small" data-element="cerrarModal">&times;</span>
+              <span class="custom-modal-close-small" data-element="cerrarModalSmall">&times;</span>
               <header class="custom-modal-header-small">
               </header>
               <div class="content-spinner">
@@ -49,7 +49,7 @@
 
             let elem = e.target.dataset.element;
 
-            if (elem === "cerrarModal") {
+            if (elem === "cerrarModalSmall") {
                 this.ocultarModal();
                 e.stopPropagation();
                 return;

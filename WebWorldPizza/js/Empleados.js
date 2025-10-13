@@ -190,8 +190,7 @@ class EmpleadosIndex {
             { nombre: "Id", tipo: "int", ordenable: true, dataset: { id: "Id", action: "verEmpleado" } },
             { nombre: "Nombre", tipo: "string", ordenable: true },
             { nombre: "DNI", tipo: "string", ordenable: true },
-            { nombre: "Fecha_alta", tipo: "string", ordenable: true },
-            { nombre: "User", tipo: "string", ordenable: true }
+            { nombre: "Fecha_alta", tipo: "string", ordenable: true }
         ];
 
         // Si no hubo coincidencias en la busqueda.
@@ -211,12 +210,11 @@ class EmpleadosIndex {
         else {
 
             // Se guardan en un array los datos para completar la tabla.
-            const arrayReducido = array.map(({ id, apellido_nombre, dni, fecha_alta, usuario_abm }) => ({
+            const arrayReducido = array.map(({ id, apellido_nombre, dni, fecha_alta }) => ({
                 Id: id,
                 Nombre: apellido_nombre,
                 DNI: dni,
-                Fecha_alta: moment(fecha_alta).format('DD/MM/YYYY'),
-                User: usuario_abm
+                Fecha_alta: moment(fecha_alta).format('DD/MM/YYYY')
             }));
 
             // Se llena la tabla.
@@ -295,7 +293,7 @@ class EdicionEmpleado {
         document.querySelector("#editTelefono").value = this.empleado.nro_telefono;
         document.querySelector("#editDomicilio").value = this.empleado.domicilio;
         document.querySelector("#editMail").value = this.empleado.mail;
-        document.querySelector("#editUsuario").value = this.empleado.usuario_abm;
+        //document.querySelector("#editUsuario").value = this.empleado.usuario_abm;
 
         this.modal.ocultarSpinner();
     }
@@ -361,7 +359,6 @@ class EdicionEmpleado {
             mail: document.querySelector("#editMail").value,
             domicilio: document.querySelector("#editDomicilio").value,
             nro_telefono: document.querySelector("#editTelefono").value,
-            usuario_abm: document.querySelector("#editUsuario").value,
             fecha_alta: this.empleado.fecha_alta
         };
 
@@ -415,8 +412,7 @@ class EdicionEmpleado {
                         apellido_nombre: data.empleado.apellido_nombre,
                         domicilio: data.empleado.domicilio,
                         nro_telefono: data.empleado.nro_telefono,
-                        mail: data.empleado.mail,
-                        usuario_abm: data.empleado.usuario_abm
+                        mail: data.empleado.mail
                     }
                 };
             }
@@ -586,8 +582,7 @@ class AltaEmpleado {
             apellido_nombre: document.querySelector("#nombre").value,            
             mail: document.querySelector("#mail").value,
             domicilio: document.querySelector("#domicilio").value,
-            nro_telefono: document.querySelector("#telefono").value,
-            usuario_abm: document.querySelector("#usuario").value
+            nro_telefono: document.querySelector("#telefono").value
         };
 
         // Se crea un objeto para guardar los datos obtenidos.
