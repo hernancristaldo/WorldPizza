@@ -84,11 +84,15 @@
         if (this.editable) {
             html =
                 `
-                <div class="formulario-elements-container">
-	                <div class="formulario-button" data-element="abrirModal">
-                        <span data-element="abrirModal">Seleccionar</span>
-	                </div>
-                    <div id="${this.nombreContenedorActivos}"></div>
+                <div class="contenedor-doble">
+                    <div class="contenedor-principal">
+	                    <div class="multiselect-button" data-element="abrirModal">
+                            <span data-element="abrirModal">Seleccionar</span>
+	                    </div>
+                    </div>
+                    <div class="contenedor-secundario">
+                        <div id="${this.nombreContenedorActivos}"></div>
+                    </div>
                 </div>
                 <div id="modal-mini-${this.nombreContenedorActivos}"></div>
             `

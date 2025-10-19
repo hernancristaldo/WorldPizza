@@ -7,6 +7,7 @@ using System.Net;
 using System.Text;
 using System.Web;
 using WebWorldPizza.Models;
+using WebWorldPizza.Models.ViewModels;
 
 namespace WebWorldPizza
 {
@@ -105,6 +106,18 @@ namespace WebWorldPizza
                         context.Response.Write(JsonConvert.SerializeObject(BUsuarioRol(requestData)));
                         break;
 
+                    case "CPedidos":
+                        context.Response.Write(JsonConvert.SerializeObject(CPedidos(requestData)));
+                        break;
+
+                    case "CEstados":
+                        context.Response.Write(JsonConvert.SerializeObject(CEstados()));
+                        break;
+
+                    case "CTiposPagos":
+                        context.Response.Write(JsonConvert.SerializeObject(CTiposPagos()));
+                        break;
+
                     default:
                         throw new ArgumentException("Solicitud no válida");
                 }
@@ -176,6 +189,9 @@ namespace WebWorldPizza
             public int id_producto { get; set; }
             public Empleados empleado { get; set; }
             public int id_empleado { get; set; }
+            public int? id_rol { get; set; }            
+            public int? id_estado { get; set; }
+            public string nombreUsuario { get; set; }
             public List<Roles> roles { get; set; }
             public Usuarios usuario { get; set; }
             public UsuariosRoles usuarioRol { get; set; }
@@ -341,12 +357,63 @@ namespace WebWorldPizza
 
         private List<UsuariosRoles> CUsuarioRoles(RequestData data)
         {
-            return metodo.CUsuarioRoles(data.filtroBusqueda);
+            return metodo.CUsuarioRoles(data.filtroBusqueda, data.id_rol);
         }
 
         private Resultado BUsuarioRol(RequestData data)
         {
             return metodo.BUsuarioRol(data.usuarioRol);
+        }
+
+        private List<PedidosVM> CPedidos(RequestData data)
+        {
+            List<PedidosVM> pedidosVM = new List<PedidosVM>();
+            PedidosVM pedidoVM = new PedidosVM();
+            List<Errores> errores = new List<Errores>();           
+
+            try
+            {
+                List<Pedidos> pedidos = metodo.CPedidos(data.filtroBusqueda, data.id_estado, data.id_rol, data.nombreUsuario);
+
+                if(pedidos[0].resultado == "Ok")
+                {
+                    foreach(Pedidos p in pedidos)
+                    {
+                        List<DetallesPedidos> detalles = metodo.CDetallesPedido(p.id);
+
+                        pedidoVM.pedido = p;
+                        pedidoVM.detalles = detalles;
+                        pedidoVM.resultado = "Ok";
+                        pedidosVM.Add(pedidoVM);
+                    }
+                }
+                else
+                {
+                    errores.Add(new Errores { cod_error = "0001", descripcion = "No se recupero ningun pedido que coincida con su busqueda." });
+                    pedidoVM.errores = errores;
+                    pedidoVM.resultado = "Error";
+                    pedidosVM.Add(pedidoVM);
+                }
+            }
+            catch
+            {
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los pedidos." });
+                pedidoVM.errores = errores;
+                pedidoVM.resultado = "Error";
+                pedidosVM.Add(pedidoVM);
+            }
+
+            return pedidosVM;
+        }
+
+        private List<Estados> CEstados()
+        {
+            return metodo.CEstados();
+        }
+
+        private List<TiposPagos> CTiposPagos()
+        {
+            return metodo.CTiposPagos();
         }
 
         public bool IsReusable => false;

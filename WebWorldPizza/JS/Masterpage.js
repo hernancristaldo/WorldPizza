@@ -170,7 +170,7 @@ class Nav {
     async llenarNavDesktop() {
 
         const menusRol = await InstanciaCry.decSer(sessionStorage.getItem('menusRol'));
-        const menuUsuario = JSON.parse(menusRol);
+        const menuUsuario = JSON.parse(menusRol);       
         
 
         // Filtrar los elementos con id_padre nulo y ordenar por la propiedad orden de forma ascendente.

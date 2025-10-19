@@ -269,7 +269,8 @@ class EdicionUsuario {
             url: '/Controller.ashx',
             body: {
                 accion: "CUsuarioRoles",
-                filtroBusqueda: this.usuario.usuario
+                filtroBusqueda: this.usuario.usuario,
+                id_rol: null
             },
             headers: {
                 'X-CSRF-Token': this.token

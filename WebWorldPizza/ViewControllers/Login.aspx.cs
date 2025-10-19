@@ -46,7 +46,7 @@ namespace WebWorldPizza.ViewControllers
                         Session["CSRFToken"] = csrfToken;                        
 
                         // Recuperamos el rol al que pertenece el usuario.
-                        List<UsuariosRoles> usuarioRolesList = metodo.CUsuarioRoles(usuario.usuario);
+                        List<UsuariosRoles> usuarioRolesList = metodo.CUsuarioRoles(usuario.usuario, null);
 
                         UsuarioSesionVM usuarioSesionVM = new UsuarioSesionVM()
                         {

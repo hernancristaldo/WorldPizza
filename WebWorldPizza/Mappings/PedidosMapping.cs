@@ -9,6 +9,7 @@ namespace WebWorldPizza.Mappings
         {
             Id(x => x.id);
             Map(x => x.nombre_cliente);
+            Map(x => x.direccion);
             Map(x => x.barrio);
             Map(x => x.pagado);
             References(x => x.tipoPago).Column("id_tipoPago").Not.LazyLoad();
@@ -17,6 +18,7 @@ namespace WebWorldPizza.Mappings
             Map(x => x.fecha_entrega);
             References(x => x.rol).Column("id_rol").Not.LazyLoad();
             Map(x => x.importe);
+            References(x => x.repartidor).Column("repartidor").Not.LazyLoad();
 
             Table("Pedidos");
         }

@@ -17,6 +17,7 @@ namespace WebWorldPizza.Models
         public virtual DateTime? fecha_entrega { get; set; }
         public virtual Roles rol { get; set; }
         public virtual decimal importe { get; set; }
+        public virtual Usuarios repartidor { get; set; }
 
         [NotMapped]
         public virtual string resultado { get; set; }

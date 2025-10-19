@@ -6,11 +6,10 @@ using System.Web;
 
 namespace WebWorldPizza.Models.ViewModels
 {
-    public class UsuarioSesionVM
+    public class PedidosVM
     {
-        public virtual Usuarios usuario { get; set; }
-        public virtual Empleados empleado { get; set; }
-        public virtual List<UsuariosRoles> usuarioRoles { get; set; }
+        public virtual Pedidos pedido { get; set; }
+        public virtual List<DetallesPedidos> detalles { get; set; }
 
         [NotMapped]
         public virtual string resultado { get; set; }

@@ -2,20 +2,41 @@
 import InstanciaCry from '/js/Utilidades/Cry.js';
 import Spinner from '/js/Utilidades/Spinner.js';
 import AsyncFetch from '/js/Utilidades/Asyncfetch.js';
+import Tabla from '/js/Utilidades/Tabla.js';
+import Alert from '/js/Utilidades/Alert.js';
+import Toast from '/js/Utilidades/Toast.js';
+import ModalSmall from '/js/Utilidades/ModalSmall.js';
+import Modal from '/js/Utilidades/Modal.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    new Pedidos();
+    new PedidosIndex();
 });
 
-class Pedidos {
-    constructor() {
-        this.asyncFetch = new AsyncFetch()
-        this.estados = []
-        this.tiposPagos = []
-        this.pedidos = []
-        this.roles = []
-        this.editar = false
-        this.token = null
+class PedidosIndex {
+    constructor(pedidos) {
+        this.asyncFetch = new AsyncFetch();
+        this.estados = [];
+        this.tiposPagos = [];
+        this.pedidos = [];
+        this.roles = [];
+        this.editar = false;
+        this.token = null;
+
+
+        if (PedidosIndex.instance) {
+
+            this.pedidos = pedidos;
+            PedidosIndex.instance.pedidos = pedidos;
+
+            this.spinnerTabla = new Spinner({
+                id_elemento: "tabla"
+            });
+
+            this.spinnerTabla.mostrarSpinner();
+            this.busqueda();
+
+            return PedidosIndex.instance;
+        }
 
         this.main();
     }
@@ -23,10 +44,6 @@ class Pedidos {
         this.token = await InstanciaCry.decSer(sessionStorage.getItem('tkn'));
         this.iniciarPrincipal();
 
-        //this.permisos();
-
-        
-        //this.evtClickPrincipal();
     }
     async iniciarPrincipal() {
 
@@ -42,29 +59,137 @@ class Pedidos {
         });
 
 
-        //this.evtClickPrincipal();
+        this.eventos();
 
         // Se instancia el spinner para la tabla.
         this.spinnerTabla = new Spinner({
             id_elemento: "spinnerTabla"
         });
 
+        await this.usuarioABM();
 
+        const repartidor = this.sessionUser.usuarioRoles[0].rol.id === 4 ? this.sessionUser.usuario.usuario : "";
+        this.pedidos = await this.getPedidos("", 1, this.sessionUser.usuarioRoles[0].rol.id, repartidor);
 
-        //// Se llena el select de empresas.
-        //let selectEmpresas = document.querySelector("#selectEmpresa");
+        this.estados = await this.getEstados();
+        this.tiposPagos = await this.getTiposPagos();
+        this.getRoles();
 
-        //if (empresas.length !== 0) {
-        //    empresas.forEach(({ nombre, id }) => {
-        //        let option = document.createElement("option");
-        //        option.innerHTML = nombre;
-        //        option.value = id;
-        //        selectEmpresas.appendChild(option);
-        //    });
-        //}
+        this.permisos();
+        
+        this.llenarSelects();
+
 
         this.principal.ocultarSpinner();
 
+        this.spinnerTabla.mostrarSpinner();
+
+        this.llenarTablaPedidos(this.pedidos);
+
+        
+
+    }
+    async usuarioABM() {
+
+        // Se recupera el usuario al iniciar sesion.
+        const usuario = await InstanciaCry.decSer(sessionStorage.getItem('sessionUsr'));
+        this.sessionUser = JSON.parse(usuario);
+        console.log(this.sessionUser);
+
+        //if (sessionUser.usuario.resultado === "Ok") this.sessionUser = sessionUser.usuario.usuario;
+    }
+    eventos() {
+        this.evtClickPrincipal();
+        this.evtClickTabla();
+    }
+    async getPedidos(filtro, estado, rol, nombreUsuario) {
+
+        // Se obtienen los pedidos del usuario.
+        let response = await this.asyncFetch.fetch({
+            url: '/Controller.ashx',
+            body: {
+                accion: "CPedidos",
+                filtroBusqueda: filtro,
+                id_estado: estado,
+                id_rol: rol === 1 ? null : rol,
+                nombreUsuario: nombreUsuario
+            },
+            headers: {
+                'X-CSRF-Token': this.token
+            }
+        });
+
+        
+
+        if (response[0].resultado === "Ok") {
+
+
+            return response;
+        }
+
+        return [];
+    }
+    async getEstados() {
+
+        // Se obtienen los pedidos del usuario.
+        const response = await this.asyncFetch.fetch({
+            url: '/Controller.ashx',
+            body: {
+                accion: "CEstados"
+            },
+            headers: {
+                'X-CSRF-Token': this.token
+            }
+        });        
+
+        if (response[0].resultado === "Ok") {
+            
+            return response;
+        }
+
+        return [];
+    }
+    async getTiposPagos() {
+
+       
+        const response = await this.asyncFetch.fetch({
+            url: '/Controller.ashx',
+            body: {
+                accion: "CTiposPagos"
+            },
+            headers: {
+                'X-CSRF-Token': this.token
+            }
+        });
+
+       
+
+        if (response[0].resultado === "Ok") {
+            
+            return response;
+        }
+
+        return [];
+    }
+    async getRoles() {
+
+        // Se obtienen los pedidos del usuario.
+        const response = await this.asyncFetch.fetch({
+            url: '/Controller.ashx',
+            body: {
+                accion: "CRoles"
+            },
+            headers: {
+                'X-CSRF-Token': this.token
+            }
+        });
+
+        if (response[0].resultado === "Ok") {
+
+            this.roles = response;
+        }
+
+        
     }
     async permisos() {
 
@@ -75,23 +200,48 @@ class Pedidos {
 
 
         if (arrayPantallas.includes(pantallaPedidos)) {
-            
+
             this.editar = true;
             //window.location.href = "/ViewControllers/Pedidos.aspx";
         }
+        else {
+            if (this.sessionUser.usuarioRoles[0].rol.id === 1) this.editar = true;
+        }
 
+    }
+    llenarSelects() {
 
+        let selectEstados = document.querySelector("#selectEstado");
+
+        this.estados.forEach(elem => {
+            const option = document.createElement('option');
+            option.value = elem.id;
+            option.innerHTML = elem.nombre;
+            selectEstados.appendChild(option);
+
+            if (elem.id === 1) option.selected = true;            
+        });
+
+        let selectTiposPago = document.querySelector("#selectTipoPago");
+
+        this.tiposPagos.forEach(elem => {
+            const option = document.createElement('option');
+            option.value = elem.id;
+            option.innerHTML = elem.nombre;
+            selectTiposPago.appendChild(option);
+        });
+
+        return;
     }
     evtClickPrincipal() {
 
-        document.querySelector('#divContenedorPestanasHome').addEventListener('click', (e) => {
+        document.querySelector('#principal').addEventListener('click', (e) => {
 
             const elem = e.target.dataset.element;
 
-            const tabInfo = this.pestanas.find((tab) => tab.id === elem);
-
-            if (tabInfo) {
-                this.cargarPestana(tabInfo);
+            if (elem === "btnBuscar") {
+                this.spinnerTabla.mostrarSpinner();
+                this.busqueda();
             }
 
             return;
@@ -99,52 +249,408 @@ class Pedidos {
         });
 
     }
-    cargarPestana(tabInfo) {
-        this.insertarContenidoPestana(tabInfo);
+    llenarTablaPedidos(pedidos) {
+        
+        // Completamos el número de columnas a utilizar, su tipo de valor y si esta columna es ordenable.
+        let columnas = [
+            { nombre: "Id", tipo: "string", ordenable: true, dataset: { id: "Id", action: "verPedido" } },
+            { nombre: "Fecha", tipo: "datetime", ordenable: true },
+            { nombre: "Cliente", tipo: "string", ordenable: true },
+            { nombre: "Direccion", tipo: "string", ordenable: true },
+            { nombre: "Estado", tipo: "string", ordenable: true },
+            { nombre: "Pagado", tipo: "string", ordenable: true },
+            { nombre: "Importe", tipo: "string", ordenable: true }
+        ];
+
+        // Si no hubo coincidencias en la busqueda.
+        if (pedidos.length === 0) {
+
+            const tabla = new Tabla();
+            tabla.llenarDatos({
+                arrayDatos: [{ "Pedidos": "No hay resultados para su busqueda." }],
+                objColumnas: [{ nombre: "Pedidos", tipo: "string", ordenable: true }],
+                id_tabla: "tablaPedidos"
+            });          
+        }
+        else {
+
+            // Se guardan en un array los datos para completar la tabla.
+            const arrayReducido = pedidos.map(({ pedido }) => ({
+                Id: pedido.id,
+                Fecha: moment(pedido.fecha_alta).format('DD/MM/YYYY'),
+                Cliente: pedido.nombre_cliente,
+                Direccion: pedido.direccion,
+                Estado: pedido.estado.nombre,
+                Pagado: pedido.pagado === false ? 'No' : 'Si',
+                Importe: `$ ${pedido.importe}`
+            }));
+
+            // Se llena la tabla.
+            const tabla = new Tabla();
+            tabla.llenarDatos({
+                arrayDatos: arrayReducido,
+                objColumnas: columnas,
+                id_tabla: "tablaPedidos"
+            });
+
+            setearPedidosPendientes();
+        }
+
+        this.spinnerTabla.ocultarSpinner();
+
+        function setearPedidosPendientes() {
+
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+
+            const tabla = document.querySelector("#tablaPedidos");
+            const rows = tabla.querySelectorAll(".table-row");
+
+            // Se compara la fecha de cada fila con la actual y se colorea de rojo si esta vencida la factura.
+            rows.forEach(row => {
+
+                const estado = row.children[4].children[1].innerHTML;                
+
+                if (estado === "Pendiente") {
+                    const items = row.querySelectorAll(".item");
+                    items.forEach(item => {
+                        item.style.color = 'red';
+                    });
+                }
+                else if (estado === "Procesando") {
+                    const items = row.querySelectorAll(".item");
+                    items.forEach(item => {
+                        item.style.color = 'orange';
+                    });
+                }
+                else if (estado === "Listo") {
+                    const items = row.querySelectorAll(".item");
+                    items.forEach(item => {
+                        item.style.color = 'lightgreen';
+                    });
+                }
+                else if (estado === "Enviado") {
+                    const items = row.querySelectorAll(".item");
+                    items.forEach(item => {
+                        item.style.color = 'green';
+                    });
+                }
+            });
+
+            return;
+        }
+
+        return;
     }
-    async insertarContenidoPestana(tabInfo) {
+    async busqueda() {
 
-        document.querySelector('#contentPestana').innerHTML = '';
-        document.querySelector('#contentPestana').appendChild(document.querySelector(tabInfo.template).content.cloneNode(true));
-        document.querySelectorAll('.link-pestana-active').forEach((elem) => elem.classList.remove('link-pestana-active'));
-        document.querySelector(`[data-element="${tabInfo.id}"]`).classList.add('link-pestana-active');
+        const filtro = document.querySelector("#filtro").value;
+        const id_estado = document.querySelector("#selectEstado").value;
+        const id_tipoPago = document.querySelector("#selectTipoPago").value;
+        const pagado = document.querySelector('[data-element="pagado"]').checked;
+        const repartidor = this.sessionUser.usuarioRoles[0].rol.id === 4 ? this.sessionUser.usuario.usuario : "";
 
-        if (tabInfo.title === "Gestiones") {
 
-            if (!this.ModuloGestiones) {
-                const { default: ModuloGestiones } = await import('/js/Home/Gestiones/Gestiones.js');
-                this.ModuloGestiones = ModuloGestiones;
+        let response = await this.getPedidos(filtro, id_estado, this.sessionUser.usuarioRoles[0].rol.id, repartidor);
+        
+
+        if (id_tipoPago !== "0") {
+            this.pedidos = response.filter(p => {
+                return (p.pedido.tipoPago.id.toString() === id_tipoPago && p.pedido.pagado === pagado);
+            });
+        }
+        else {
+            this.pedidos = response.filter(p => p.pedido.pagado === pagado);
+        }
+        
+
+        this.llenarTablaPedidos(this.pedidos);
+    }
+    evtClickTabla() {
+
+        // Se crea el evento click en la tabla de promociones.
+        document.querySelector("#tablaPedidos").addEventListener('click', e => {
+
+            let elem = "";
+
+            if (e.target.classList.contains("item") && e.target.parentElement.parentElement.dataset.action === "verPedido") {
+
+                elem = e.target.parentElement.parentElement.dataset.id;
+            }
+            else if (e.target.classList.contains("colum") && e.target.parentElement.dataset.action === "verPedido") {
+                elem = e.target.parentElement.dataset.id;
+            }
+            else {
+
+                return;
             }
 
-            new this.ModuloGestiones();
-            return;
+            // Se obtiene la promocion seleccionado de la tabla.
+            console.log(this.pedidos);
+            let [pedido] = this.pedidos.filter(e => e.pedido.id.toString() === elem);
 
-        }
+            // Se despliega menu flotante.
+            this.abrirMenuFlotante({ event: e, pedido: pedido });
+        });
+    }
+    async abrirMenuFlotante({ event, pedido }) {
 
-        if (tabInfo.title === "Abonados") {
+        const id_contenedor = "principal";
 
-            if (!this.ModuloAbonados) {
-                const { default: ModuloAbonados } = await import('/js/Home/Abonados/Abonados.js');
-                this.ModuloAbonados = ModuloAbonados;
+        // Creamos html.
+        const contenedor = document.createElement("div");
+        contenedor.className = "menu-flotante";
+        contenedor.appendChild(await this.GetHtmlPermisosMenuFlotante());
+
+        contenedor.style.cssText += `top: ${event.clientY + window.scrollY - 10}px; left: ${event.clientX - 10}px;`;
+
+        document.querySelector(`#${id_contenedor}`).appendChild(contenedor);
+
+        // Cuando el mouse salga del elemento lo quitamos.
+        contenedor.addEventListener('mouseleave', e => {
+            const menuExistente = document.querySelector(".menu-flotante");
+            if (menuExistente) menuExistente.remove();
+        });
+
+        // Cuando se hace click sobre el menu flotante.
+        contenedor.addEventListener('click', e => {
+
+            const elem = e.target.dataset.action;
+
+            if (elem === "verEstado") {
+
+                new EstadoPedido(this.editar, this.sessionUser, pedido, this.roles, this.estados, this.tiposPagos, this.pedidos);
+                return;
             }
 
-            new this.ModuloAbonados();
-            return;
-        }
+            if (elem === "verDetalles") {
 
-        if (tabInfo.title === "Asignaciones") {
-
-
-            if (!this.ModuloAsignaciones) {
-                const { default: AsignacionesIndex } = await import('/js/Home/AsignacionesIndex/AsignacionesIndex.js');
-                this.ModuloAsignaciones = AsignacionesIndex;
+                new Toast({ mensaje: 'Funcion en desarrollo', type: 'error', timmer: 3000 });
+                return;
             }
 
-            new this.ModuloAsignaciones();
-            return;
 
-        }
+        });
 
     }
+    async GetHtmlPermisosMenuFlotante() {
 
+        const contenedor = document.createElement("div");
+
+        const html = `
+            <span data-action="verEstado" class="btn-flotante">Estado</span>
+            <span data-action="verDetalles" class="btn-flotante">Detalles</span>
+            
+        `
+
+        contenedor.insertAdjacentHTML('beforeend', html);
+
+        return contenedor;
+    }
+}
+
+
+class EstadoPedido {
+    constructor(editar, sessionUser, pedido, roles, estados, tiposPago, pedidos) {
+        this.asyncFetch = new AsyncFetch();
+        this.editar = editar;
+        this.sessionUser = sessionUser;
+        this.pedido = pedido;
+        this.roles = roles;
+        this.estados = estados;
+        this.tiposPago = tiposPago;
+        this.pedidos = pedidos;
+
+        this.main();
+    }
+    async main() {
+        this.token = await InstanciaCry.decSer(sessionStorage.getItem('tkn'));
+        this.llenarModal();
+    }
+    async permisos() {
+
+        // De acuerdo al permiso se agrega el switch de edicion.
+        if (this.editar) {
+
+            // Switch.
+            const html =
+                `
+                <label class="switch">
+                    <input class="toggle__input" type="checkbox" id="myToggle" data-element="btnSwitch">
+                    <span class="slider round"></span>
+                </label>
+            `;
+
+            document.querySelector("#switchEdicion").insertAdjacentHTML('afterbegin', html);
+
+            // Se inserta el boton de recarga de modal.
+            const contenedorResetModal = document.querySelector("#resetModal");
+            const btnReset = `<span data-element="recargarModal" class="btn-refresh">Refresh</span>`;
+            contenedorResetModal.insertAdjacentHTML('beforeend', btnReset);
+        }
+    }
+    async llenarModal() {
+
+        // Clonar el contenido del template
+        const clone = document.querySelector("#bodyEdicion").content.cloneNode(true);
+        document.querySelector("#modal").innerHTML = "";
+
+        // Instanciamos un modal e insertamos contenido.
+        this.modal = new Modal({
+            id_contenedor: 'modal',
+            htmlInsertar: clone,
+            titulo: "Edicion"
+        });
+
+        
+
+        this.eventos();
+        this.permisos();
+        this.llenarDatos();
+    }
+    llenarDatos() {
+
+        // Se setean los campos con los datos del usuario.
+        document.querySelector("#codigo").value = this.pedido.pedido.id;
+        document.querySelector("#cliente").value = this.pedido.pedido.nombre_cliente;
+        document.querySelector("#direccion").value = this.pedido.pedido.direccion;
+        document.querySelector("#importe").value = this.pedido.pedido.importe;
+        document.querySelector("#pago").value = this.pedido.pedido.pagado === true ? "1" : "0";
+
+        this.llenarSelects();
+        
+
+        
+    }
+    llenarSelects() {
+
+        let tiposPago = document.querySelector("#tipoPago");
+
+        for (let i = tiposPago.options.length; i >= 0; i--) {
+            tiposPago.remove(i);
+        }
+
+        //const optionCero = document.createElement("option");
+        //optionCero.innerHTML = "";
+        //optionCero.value = 0;
+        //tiposPago.appendChild(optionCero);
+
+        this.tiposPago.forEach(({ id, nombre }) => {
+            const option = document.createElement("option");
+            option.innerHTML = nombre;
+            option.value = id;
+            tiposPago.appendChild(option);
+
+            // Si es edicion se deja seleccionado el articulo correspondiente.
+            if (this.pedido.pedido.tipoPago.id === id) {
+                option.selected = true;
+            }
+        });
+
+        let estados = document.querySelector("#estado");
+
+        for (let i = estados.options.length; i >= 0; i--) {
+            estados.remove(i);
+        }
+
+        //const optionCero = document.createElement("option");
+        //optionCero.innerHTML = "";
+        //optionCero.value = 0;
+        //estados.appendChild(optionCero);
+
+        this.estados.forEach(({ id, nombre }) => {
+            const option = document.createElement("option");
+            option.innerHTML = nombre;
+            option.value = id;
+            estados.appendChild(option);
+
+            // Si es edicion se deja seleccionado el articulo correspondiente.
+            if (this.pedido.pedido.estado.id === id) {
+                option.selected = true;
+            }
+        });
+
+        let roles = document.querySelector("#rol");
+
+        for (let i = roles.options.length; i >= 0; i--) {
+            roles.remove(i);
+        }
+
+        //const optionCero = document.createElement("option");
+        //optionCero.innerHTML = "";
+        //optionCero.value = 0;
+        //tiposPago.appendChild(optionCero);
+
+        this.roles.forEach(({ id, nombre }) => {
+            const option = document.createElement("option");
+            option.innerHTML = nombre;
+            option.value = id;
+            roles.appendChild(option);
+
+            // Si es edicion se deja seleccionado el articulo correspondiente.
+            if (this.pedido.pedido.rol.id === id) {
+                option.selected = true;
+            }
+        });
+
+        this.modal.ocultarSpinner();
+    }
+    eventos() {
+        this.evtClick();
+        //this.evtChangeTablaRoles();
+    }
+    evtClick() {
+        document.querySelector("#modal .custom-modal").addEventListener('click', e => {
+            let elem = e.target.dataset.element;
+
+            if (elem === "btnSwitch") {
+
+                // Recuperamos los elementos editables.
+                const itemsValidar = document.querySelectorAll('#modal [data-editable="true"]');
+
+                if (e.target.checked) {
+
+                    // Habilitamos los elementos editables.
+                    itemsValidar.forEach(elem => {
+                        elem.disabled = false;
+                    });
+
+                    // Mostramos los botones de editar y eliminar.
+                    document.querySelector('[data-element="btnGuardar"]').style.display = "block";
+
+                   
+                }
+                else {
+
+                    // deshabilitamos los elementos editables.
+                    itemsValidar.forEach(elem => {
+                        elem.disabled = true;
+                    });
+
+                    // Ocultamos los botones de editar y eliminar.
+                    document.querySelector('[data-element="btnGuardar"]').style.display = "none";
+                    
+                }
+                return;
+            }
+
+            if (elem === "btnGuardar") {
+                //this.modal.mostrarSpinner();
+                //this.editarUsuario();
+
+                new Toast({ mensaje: 'funcion en desarrollo', type: 'error', timmer: 3000 });
+            }
+
+            if (elem === "recargarModal") {
+                this.modal.mostrarSpinner();
+                this.llenarDatos();
+            }            
+
+            if (elem === "cerrarModal") {
+
+                // Se vuelve a la pantalla principal.
+                new PedidosIndex(this.pedidos);
+            }
+        });
+    }
 }

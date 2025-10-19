@@ -25,6 +25,7 @@ namespace WebWorldPizza
             }
         }
 
+        #region ConsultasGenerales
         public List<Roles> CRoles()
         {
             // Instanciamos una lista de objetos.
@@ -41,17 +42,13 @@ namespace WebWorldPizza
 
             try
             {
-
                 using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
                 {
-
                     try
                     {
-
                         rolesList = sessionDBGestionesMM.QueryOver<Roles>()
                                                         .List().ToList();
 
-                        
 
                         // Si la búsqueda no retorna resultados.
                         if (rolesList.Count == 0)
@@ -81,7 +78,7 @@ namespace WebWorldPizza
                     {
 
                         // Se guarda el error.
-                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los roles." });                        
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los roles." });
                         rol.resultado = "Error";
                         rol.errores = errores;
                         rolesList.Add(rol);
@@ -94,14 +91,14 @@ namespace WebWorldPizza
 
                 // Se guarda el error.
                 errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
-                rol.errores = errores;               
+                rol.errores = errores;
                 rol.resultado = "Error";
                 rolesList.Add(rol);
 
             }
 
             return rolesList;
-        }       
+        }
 
         public List<PantallasRoles> CPantallasRoles(int? id_rol)
         {
@@ -117,7 +114,7 @@ namespace WebWorldPizza
             // Se instancia la clase Errores.
             Errores error = new Errores();
 
-            
+
 
             try
             {
@@ -158,16 +155,16 @@ namespace WebWorldPizza
                             foreach (PantallasRoles a in pantallasRolesList) { a.resultado = "Ok"; }
                         }
 
-                        
+
 
                     }
-                    
+
                     catch
                     {
 
                         // Se llama al método que realiza el registro de errores
                         // y se agrega a la lista de errores el objeto devuelto por el método.
-                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar las pantallas del rol."});
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar las pantallas del rol." });
 
                         // Se setea la variable 'resultado' en "Error"
                         pantallaRol.resultado = "Error";
@@ -185,7 +182,7 @@ namespace WebWorldPizza
 
                 // Se llama al método que realiza el registro de errores
                 // y se agrega a la lista de errores el objeto devuelto por el método.
-                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos."});
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
 
                 pantallaRol.errores = errores;
 
@@ -214,7 +211,7 @@ namespace WebWorldPizza
             // Se instancia la clase Errores.
             Errores error = new Errores();
 
-            
+
 
             try
             {
@@ -256,12 +253,12 @@ namespace WebWorldPizza
                             // A cada objeto recuperado le seteamos la variable resultado en "Ok".
                             foreach (MenusRoles a in menuList) { a.resultado = "Ok"; }
                         }
-                    }                    
+                    }
                     catch
                     {
                         // Se llama al método que realiza el registro de errores
                         // y se agrega a la lista de errores el objeto devuelto por el método.
-                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar el menu."});
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar el menu." });
 
                         // Se setea la variable 'resultado' en "Error"
                         menu.resultado = "Error";
@@ -276,7 +273,7 @@ namespace WebWorldPizza
             {
                 // Se llama al método que realiza el registro de errores
                 // y se agrega a la lista de errores el objeto devuelto por el método.
-                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos."});
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
 
                 menu.errores = errores;
 
@@ -288,6 +285,287 @@ namespace WebWorldPizza
 
             return menuList;
         }
+
+        public List<Pedidos> CPedidos(string filtroBusqueda, int? id_estado, int? id_rol, string usuario)
+        {
+            // Instanciamos una lista de objetos.
+            List<Pedidos> pedidos = new List<Pedidos>();
+
+            // Instanciamos objeto.
+            Pedidos pedido = new Pedidos();
+
+            // Instanciamos una lista de Errores.
+            List<Errores> errores = new List<Errores>();
+
+            // Se instancia la clase Errores.
+            Errores error = new Errores();
+
+            try
+            {
+                Pedidos pe = null;
+
+                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    try
+                    {
+                        var query = sessionDBGestionesMM.QueryOver(() => pe)
+                                                        .Where(m => m.id != 0);
+
+                        if (filtroBusqueda != "") query.And(a => a.nombre_cliente.IsLike(usuario, MatchMode.Exact));
+
+                        if (usuario != "") query.And(a => a.repartidor.usuario.IsLike(usuario, MatchMode.Exact));
+
+                        if (id_estado != null) query.JoinQueryOver(a => pe.estado)
+                                                      .Where(a => a.id == id_estado);
+
+                        if (id_rol != null) query.JoinQueryOver(a => pe.rol)
+                                                      .Where(a => a.id == id_rol);
+
+                        pedidos = new List<Pedidos>(query.List());
+
+                        // Si la búsqueda no retorna resultados.
+                        if (pedidos.Count == 0)
+                        {
+                            error = new Errores()
+                            {
+                                descripcion = $"No se recupero ningun pedido que coincida con su busqueda.",
+                                cod_error = "0001"
+                            };
+
+                            errores.Add(error);
+
+                            pedido.resultado = "Error";
+                            pedido.errores = errores;
+
+                            pedidos.Add(pedido);
+                        }
+                        else
+                        {
+                            // A cada objeto recuperado le seteamos la variable resultado en "Ok".
+                            foreach (Pedidos p in pedidos) { p.resultado = "Ok"; }
+                        }
+                    }
+                    catch
+                    {
+                        // Se guarda el error.
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los pedidos." });
+                        pedido.resultado = "Error";
+                        pedido.errores = errores;
+                        pedidos.Add(pedido);
+                    }
+                }
+            }
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                pedido.errores = errores;
+                pedido.resultado = "Error";
+                pedidos.Add(pedido);
+            }
+
+            return pedidos;
+        }
+
+        public List<DetallesPedidos> CDetallesPedido(int? id_pedido)
+        {
+            // Instanciamos una lista de objetos.
+            List<DetallesPedidos> detallesPedido = new List<DetallesPedidos>();
+
+            // Instanciamos objeto.
+            DetallesPedidos detalle = new DetallesPedidos();
+
+            // Instanciamos una lista de Errores.
+            List<Errores> errores = new List<Errores>();
+
+            // Se instancia la clase Errores.
+            Errores error = new Errores();
+
+            try
+            {
+                DetallesPedidos det = null;
+
+                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    try
+                    {
+                        var query = sessionDBGestionesMM.QueryOver(() => det)
+                                                        .Where(m => m.id != 0);
+                                                        
+
+                        
+
+                        if (id_pedido != null) query.JoinQueryOver(a => det.pedido)
+                                                      .Where(a => a.id == id_pedido);
+
+                        detallesPedido = new List<DetallesPedidos>(query.List());
+
+                        // Si la búsqueda no retorna resultados.
+                        if (detallesPedido.Count == 0)
+                        {
+                            error = new Errores()
+                            {
+                                descripcion = $"No se recupero ningun detalle de pedido que coincida con su busqueda.",
+                                cod_error = "0001"
+                            };
+
+                            errores.Add(error);
+                            detalle.resultado = "Error";
+                            detalle.errores = errores;
+
+                            detallesPedido.Add(detalle);
+                        }
+                        else
+                        {
+                            // A cada objeto recuperado le seteamos la variable resultado en "Ok".
+                            foreach (DetallesPedidos d in detallesPedido) { d.resultado = "Ok"; }
+                        }
+                    }
+                    catch
+                    {
+                        // Se guarda el error.
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los detalles de pedidos." });
+                        detalle.resultado = "Error";
+                        detalle.errores = errores;
+                        detallesPedido.Add(detalle);
+                    }
+                }
+            }
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                detalle.resultado = "Error";
+                detalle.errores = errores;
+                detallesPedido.Add(detalle);
+            }
+
+            return detallesPedido;
+        }
+
+        public List<Estados> CEstados()
+        {
+            // Instanciamos una lista de objetos.
+            List<Estados> estadosList = new List<Estados>();
+
+            // Instanciamos objeto.
+            Estados estado = new Estados();
+
+            // Instanciamos una lista de Errores.
+            List<Errores> errores = new List<Errores>();
+
+            try
+            {
+                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    try
+                    {
+                        estadosList = sessionDBGestionesMM.QueryOver<Estados>()
+                                                        .List().ToList();
+
+
+                        // Si la búsqueda no retorna resultados.
+                        if (estadosList.Count == 0)
+                        {
+                            errores.Add(new Errores { cod_error = "0001", descripcion = "No se recupero ningun estado."});
+                            estado.resultado = "Error";
+                            estado.errores = errores;
+
+                            estadosList.Add(estado);
+                        }
+                        else
+                        {
+                            // A cada objeto recuperado le seteamos la variable resultado en "Ok".
+                            foreach (Estados a in estadosList) { a.resultado = "Ok"; }
+                        }
+
+                    }
+                    catch
+                    {
+
+                        // Se guarda el error.
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los estados." });
+                        estado.resultado = "Error";
+                        estado.errores = errores;
+                        estadosList.Add(estado);
+
+                    }
+                }
+            }
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                estado.resultado = "Error";
+                estado.errores = errores;
+                estadosList.Add(estado);
+            }
+
+            return estadosList;
+        }
+
+        public List<TiposPagos> CTiposPagos()
+        {
+            // Instanciamos una lista de objetos.
+            List<TiposPagos> tiposPagosList = new List<TiposPagos>();
+
+            // Instanciamos objeto.
+            TiposPagos tipoPago = new TiposPagos();
+
+            // Instanciamos una lista de Errores.
+            List<Errores> errores = new List<Errores>();
+
+            try
+            {
+                using (var sessionDBGestionesMM = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    try
+                    {
+                        tiposPagosList = sessionDBGestionesMM.QueryOver<TiposPagos>()
+                                                        .List().ToList();
+
+
+                        // Si la búsqueda no retorna resultados.
+                        if (tiposPagosList.Count == 0)
+                        {
+                            errores.Add(new Errores { cod_error = "0001", descripcion = "No se recupero ningun tipo de pago." });
+                            tipoPago.resultado = "Error";
+                            tipoPago.errores = errores;
+
+                            tiposPagosList.Add(tipoPago);
+                        }
+                        else
+                        {
+                            // A cada objeto recuperado le seteamos la variable resultado en "Ok".
+                            foreach (TiposPagos a in tiposPagosList) { a.resultado = "Ok"; }
+                        }
+
+                    }
+                    catch
+                    {
+
+                        // Se guarda el error.
+                        errores.Add(new Errores { cod_error = "0001", descripcion = "Error al consultar los tipos de pago." });
+                        tipoPago.resultado = "Error";
+                        tipoPago.errores = errores;
+                        tiposPagosList.Add(tipoPago);
+
+                    }
+                }
+            }
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse a la base de datos." });
+                tipoPago.resultado = "Error";
+                tipoPago.errores = errores;
+                tiposPagosList.Add(tipoPago);
+            }
+
+            return tiposPagosList;
+        }
+
+        #endregion ConsultasGenerales
 
         #region ABMCUsuarios
         public Usuarios CUsuario(string user, string pass)
@@ -1340,7 +1618,7 @@ namespace WebWorldPizza
         #endregion ABMCEmpleados
 
         #region ABMCUsuariosRoles
-        public List<UsuariosRoles> CUsuarioRoles(string usuario)
+        public List<UsuariosRoles> CUsuarioRoles(string usuario, int? id_rol)
         {
             // Instanciamos una lista de objetos.
             List<UsuariosRoles> usuarioRolesList = new List<UsuariosRoles>();
@@ -1367,6 +1645,12 @@ namespace WebWorldPizza
                                                         .Where(a => a.usuario.usuario != "");
 
                         if (usuario != "") query.And(a => a.usuario.usuario.IsLike(usuario, MatchMode.Exact));
+
+                        if (id_rol != null)
+                        {
+                            query.JoinQueryOver(b => b.rol)
+                                 .And(b => b.id == id_rol);
+                        }
 
                         usuarioRolesList = new List<UsuariosRoles>(query.List());
 

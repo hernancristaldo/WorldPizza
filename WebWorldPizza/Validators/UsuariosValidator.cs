@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using WebWorldPizza.Helpers;
 using WebWorldPizza.Models;
@@ -35,9 +36,8 @@ namespace WebWorldPizza.Validators
                 RuleFor(p => p.empleado.id).Cascade(CascadeMode.StopOnFirstFailure)
                                   .NotEmpty().WithMessage("El empleado es obligatorio.").WithErrorCode("0001")
                                   .Must(CEmpleado).WithMessage("El empleado no existe.").WithErrorCode("0001");
-                RuleFor(p => p.usuario).Cascade(CascadeMode.StopOnFirstFailure)
-                                   .NotEmpty().WithMessage("El usuario es obligatorio.").WithErrorCode("0001")
-                                   .Must(CUsuario).WithMessage("El usuario ya existe.").WithErrorCode("0001");
+                RuleFor(p => p.usuario).NotEmpty().WithMessage("El usuario es obligatorio.").WithErrorCode("0001");
+                RuleFor(p => p).Must(CUsuarioEdit).WithMessage("El usuario ya existe.").WithErrorCode("0001");
                 RuleFor(p => p.pass).NotEmpty().WithMessage("La contaseña es obligatoria.").WithErrorCode("0001");
             });
         }
@@ -56,6 +56,20 @@ namespace WebWorldPizza.Validators
             return result;
         }
 
+        // Se verifica que el usuario no este asignado a un empleado.
+        private bool CUsuarioEdit(Usuarios usuario)
+        {
+            bool result = true;
+
+            Metodos metodo = new Metodos();
+
+            Usuarios usuarioExistente = metodo.CUsuarios(usuario.usuario, null).SingleOrDefault();
+
+            if (usuarioExistente.resultado == "Ok" && usuario.empleado.id != usuarioExistente.empleado.id) result = false;
+
+            return result;
+        }
+
         // Se verifica si el usuario esta asociado a un rol.
         private bool CUsuariosRoles(string usuario)
         {
@@ -63,7 +77,7 @@ namespace WebWorldPizza.Validators
 
             Metodos metodo = new Metodos();
 
-            List<UsuariosRoles> usuariosRoles = metodo.CUsuarioRoles(usuario);
+            List<UsuariosRoles> usuariosRoles = metodo.CUsuarioRoles(usuario, null);
 
             if (usuariosRoles[0].resultado == "Ok") result = false;
 
