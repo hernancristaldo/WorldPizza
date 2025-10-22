@@ -77,13 +77,15 @@
                         <label class="formbold-form-label">Importe</label>
                         <input id="importe" class="form-control" type="text" disabled />
                     </div>
+                </div>
+                <div class="formulario-5">
                     <div class="formulario__grupo">                
 			            <label class="formbold-form-label">Pago</label>
                         <select id="pago" class="form-control" data-editable="true" disabled>
                             <option value="0">No pagado</option>
                             <option value="1">Pagado</option>
                         </select>
-                    </div>
+                    </div>                
                     <div class="formulario__grupo">                
 			            <label class="formbold-form-label">Tipo Pago</label>
                         <select id="tipoPago" class="form-control" data-editable="true" disabled></select>
@@ -95,6 +97,10 @@
                     <div class="formulario__grupo">                
 			            <label class="formbold-form-label">Asignado a</label>
                         <select id="rol" class="form-control" data-editable="true" disabled></select>
+                    </div>
+                    <div class="formulario__grupo" id="grupoReparto" style="display: none;">                
+			            <label class="formbold-form-label">Repartidor</label>
+                        <select id="repartidor" class="form-control" data-editable="true" disabled></select>
                     </div>
                 </div>
 

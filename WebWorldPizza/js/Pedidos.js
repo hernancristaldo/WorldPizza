@@ -94,7 +94,7 @@ class PedidosIndex {
         // Se recupera el usuario al iniciar sesion.
         const usuario = await InstanciaCry.decSer(sessionStorage.getItem('sessionUsr'));
         this.sessionUser = JSON.parse(usuario);
-        console.log(this.sessionUser);
+        
 
         //if (sessionUser.usuario.resultado === "Ok") this.sessionUser = sessionUser.usuario.usuario;
     }
@@ -385,8 +385,7 @@ class PedidosIndex {
                 return;
             }
 
-            // Se obtiene la promocion seleccionado de la tabla.
-            console.log(this.pedidos);
+            // Se obtiene la promocion seleccionado de la tabla.            
             let [pedido] = this.pedidos.filter(e => e.pedido.id.toString() === elem);
 
             // Se despliega menu flotante.
@@ -460,6 +459,8 @@ class EstadoPedido {
         this.estados = estados;
         this.tiposPago = tiposPago;
         this.pedidos = pedidos;
+        this.repartidores = [];
+        
 
         this.main();
     }
@@ -502,11 +503,40 @@ class EstadoPedido {
             titulo: "Edicion"
         });
 
-        
+        this.repartidores = await this.getRepartidores();
 
         this.eventos();
         this.permisos();
         this.llenarDatos();
+    }
+    async getRepartidores() {
+
+        // Se obtienen los usuarios con rol 'reparto'
+        const response = await this.asyncFetch.fetch({
+            url: '/Controller.ashx',
+            body: {
+                accion: "CUsuarioRoles",
+                filtroBusqueda: "",
+                id_rol: 4
+            },
+            headers: {
+                'X-CSRF-Token': this.token
+            }
+        });
+
+        console.log(response);
+
+        if (response[0].resultado === "Ok") {
+
+            let repartidores = response.map(obj => obj.usuario);
+
+            
+            console.log(repartidores);
+
+            return repartidores;
+        }
+
+        return [];
     }
     llenarDatos() {
 
@@ -517,10 +547,7 @@ class EstadoPedido {
         document.querySelector("#importe").value = this.pedido.pedido.importe;
         document.querySelector("#pago").value = this.pedido.pedido.pagado === true ? "1" : "0";
 
-        this.llenarSelects();
-        
-
-        
+        this.llenarSelects();       
     }
     llenarSelects() {
 
@@ -529,11 +556,6 @@ class EstadoPedido {
         for (let i = tiposPago.options.length; i >= 0; i--) {
             tiposPago.remove(i);
         }
-
-        //const optionCero = document.createElement("option");
-        //optionCero.innerHTML = "";
-        //optionCero.value = 0;
-        //tiposPago.appendChild(optionCero);
 
         this.tiposPago.forEach(({ id, nombre }) => {
             const option = document.createElement("option");
@@ -552,12 +574,7 @@ class EstadoPedido {
         for (let i = estados.options.length; i >= 0; i--) {
             estados.remove(i);
         }
-
-        //const optionCero = document.createElement("option");
-        //optionCero.innerHTML = "";
-        //optionCero.value = 0;
-        //estados.appendChild(optionCero);
-
+        
         this.estados.forEach(({ id, nombre }) => {
             const option = document.createElement("option");
             option.innerHTML = nombre;
@@ -576,11 +593,6 @@ class EstadoPedido {
             roles.remove(i);
         }
 
-        //const optionCero = document.createElement("option");
-        //optionCero.innerHTML = "";
-        //optionCero.value = 0;
-        //tiposPago.appendChild(optionCero);
-
         this.roles.forEach(({ id, nombre }) => {
             const option = document.createElement("option");
             option.innerHTML = nombre;
@@ -592,6 +604,34 @@ class EstadoPedido {
                 option.selected = true;
             }
         });
+
+        if (this.pedido.pedido.rol.id === 4) {
+            document.querySelector("#grupoReparto").style.display = 'block';
+
+            let selectRepartidores = document.querySelector("#repartidor");
+
+            for (let i = selectRepartidores.options.length; i >= 0; i--) {
+                selectRepartidores.remove(i);
+            }
+
+            const optionCero = document.createElement('option');
+            optionCero.value = '0';
+            optionCero.innerHTML = 'Ninguno';
+            selectRepartidores.appendChild(optionCero);
+
+            this.repartidores.forEach(({ usuario, empleado }) => {  
+                const option = document.createElement("option");
+                option.innerHTML = `${usuario} - ${empleado.apellido_nombre}`;
+                option.value = usuario;
+                selectRepartidores.appendChild(option);
+
+                if (this.pedido.pedido.repartidor !== null) {
+                    if (this.pedido.pedido.repartidor === usuario) {
+                        option.selected === true;
+                    }
+                }
+            });
+        }
 
         this.modal.ocultarSpinner();
     }
@@ -635,10 +675,17 @@ class EstadoPedido {
             }
 
             if (elem === "btnGuardar") {
-                //this.modal.mostrarSpinner();
-                //this.editarUsuario();
+                
+                const intancia = new Alert({ mensaje: 'Desea guardar los cambios realizados?', title: "Confimación", type: "question" });
+                intancia.sub('aceptar', data => {
 
-                new Toast({ mensaje: 'funcion en desarrollo', type: 'error', timmer: 3000 });
+                    this.modal.mostrarSpinner();
+
+                    // Se llama al metodo para editar el envio si el envio no es nulo.
+                    this.edicionPedido();
+
+                    new Toast({ mensaje: 'funcion en desarrollo', type: 'error', timmer: 3000 });
+                });                
             }
 
             if (elem === "recargarModal") {
@@ -652,5 +699,166 @@ class EstadoPedido {
                 new PedidosIndex(this.pedidos);
             }
         });
+    }
+    recuperarDatos() {
+
+        const [tipoPago] = this.tiposPago.filter(t => t.id === parseInt(document.querySelector("#tipoPago").value));
+        const [estado] = this.estados.filter(e => e.id === parseInt(document.querySelector("#estado").value));
+        const [rol] = this.roles.filter(r => r.id === parseInt(document.querySelector("#rol").value));
+
+        // Se recupera el valor de los campos completados.    
+        const pedido = {
+            id: this.pedido.pedido.id,
+            nombre_cliente: this.pedido.pedido.nombre_cliente,
+            direccion: this.pedido.pedido.direccion,
+            importe: this.pedido.pedido.importe,
+            pagado: document.querySelector("#pago").value === "0" ? false : true,
+            tipoPago: tipoPago,
+            estado: estado,
+            rol: rol
+        };
+
+        const data = {
+            accion: "MPedido",
+            pedido: pedido
+        };
+
+        return data;
+    }
+    async edicionPedido() {
+
+        const data = await this.recuperarDatos();
+
+        console.log(data);
+
+        //// Se realiza la edicion del usuario.
+        //const response = await this.asyncFetch.fetch({
+        //    url: "/Controller.ashx",
+        //    body: data,
+        //    headers: {
+        //        'X-CSRF-Token': this.token
+        //    }
+        //});
+
+        //const { resultado, errores } = Array.isArray(response) ? response[0] : response;
+
+        const resultado = "Ok";
+
+        //this.modal.ocultarSpinner();
+
+        if (resultado !== "Ok") {
+
+            this.limpiarErrores();
+            this.mostrarErrores(errores);
+            return;
+        }
+        else {
+
+            this.limpiarErrores();
+
+            if (this.pedido.pedido.rol.id !== data.pedido.rol.id) {
+                document.querySelector('[data-element="btnSwitch"]').click();
+                document.querySelector('.switch').remove();
+            }
+
+
+            // Si la edición se realizó de manera correcta.
+            new Alert({ mensaje: 'Pedido editado correctamente.', title: "Exito", type: "success" });
+
+            // Se actualizan los datos del pedido en el array.
+            this.pedidos.forEach(item => {
+                if (item.pedido.id === this.pedido.pedido.id) {
+                    item.pedido.pagado = data.pedido.pagado;
+                    item.pedido.tipoPago = data.pedido.tipoPago;
+                    item.pedido.estado = data.pedido.estado;
+                    item.pedido.rol = data.pedido.rol;
+                }
+            });
+
+
+            //para detallePedido
+            //lista.forEach(item => {
+            //    if (item.pedido.id === idPedido) {
+            //        item.detallesPedido.forEach(detalle => {
+            //            if (detalle.id === idDetalle) {
+            //                detalle.cantidad = 5; // nuevo valor
+            //            }
+            //        });
+            //    }
+            //});
+
+
+            // Se actualiza el usuario seleccionado.
+            const [p] = this.pedidos.filter(e => e.pedido.id === this.pedido.pedido.id);
+            this.pedido = p;
+
+
+            console.log(p);
+
+           
+        }
+
+        this.llenarDatos();
+
+        return;
+    }
+    // Errores
+    mostrarErrores(errores) {
+
+        if (errores.length > 1) {
+
+            if (errores[0]?.propiedad != undefined) {
+
+                errores.forEach(({ descripcion, propiedad }) => {
+
+                    const elementoError = document.querySelector(`#modal [data-validate="${propiedad}"]`);
+
+                    if (elementoError) {
+                        const erroresElement = elementoError.parentElement.querySelector(".individual-errores");
+                        erroresElement.innerHTML = descripcion;
+                        elementoError.classList.add("inputError");
+                    }
+                });
+
+                new Alert({
+                    mensaje: "Revise los errores generados.",
+                    title: "Error",
+                    type: "error"
+                });
+            }
+            else {
+
+                new Alert({
+                    mensaje: "Se produjeron multiples errores.",
+                    title: "Error",
+                    type: "error"
+                });
+
+                errores.forEach(error => {
+                    new Toast({ mensaje: error.descripcion, type: "error" });
+                });
+            }
+        }
+        else if (errores.length === 1) {
+            new Alert({ mensaje: errores[0].descripcion, title: "Error", type: "error" });
+        }
+
+        return;
+    }
+    limpiarErrores() {
+
+        // Se limpian los errores.
+        const elementoError = document.querySelectorAll(`#modal [required]`);
+
+        if (elementoError.length !== 0) {
+
+            elementoError.forEach(elem => {
+                const erroresElement = elem.parentElement.querySelector(".individual-errores");
+                erroresElement.innerHTML = "";
+                elem.classList.remove("inputError");
+            })
+        }
+
+        return;
     }
 }

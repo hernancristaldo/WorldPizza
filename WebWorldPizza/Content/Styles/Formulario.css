@@ -44,6 +44,13 @@ main {
     padding-top: 10px;    
 }
 
+.formulario-5 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    gap: 20px;
+    padding-top: 10px;
+}
+
 
 
 .formulario-1-3 {

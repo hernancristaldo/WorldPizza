@@ -16,9 +16,9 @@ namespace WebWorldPizza.Validators
                 RuleFor(p => p.apellido_nombre).NotEmpty().WithMessage("El nombre y apellido es obligatorio.").WithErrorCode("0001");
                 RuleFor(p => p.nro_telefono).NotEmpty().WithMessage("El nro de telefono es obligatorio.").WithErrorCode("0001");
                 RuleFor(p => p.domicilio).NotEmpty().WithMessage("La direccion es obligatoria.").WithErrorCode("0001");
-                RuleFor(p => p.usuario_abm).Cascade(CascadeMode.StopOnFirstFailure)
-                                   .NotEmpty().WithMessage("El usuario es obligatorio.").WithErrorCode("0001")
-                                   .Must(CUsuario).WithMessage("El usuario ya existe.").WithErrorCode("0001");
+                //RuleFor(p => p.usuario_abm).Cascade(CascadeMode.StopOnFirstFailure)
+                //                   .NotEmpty().WithMessage("El usuario es obligatorio.").WithErrorCode("0001")
+                //                   .Must(CUsuario).WithMessage("El usuario ya existe.").WithErrorCode("0001");
                 RuleFor(p => p.dni).Cascade(CascadeMode.StopOnFirstFailure)
                                    .NotEmpty().WithMessage("El DNI/CUIT es obligatorio.").WithErrorCode("0001")
                                    .Must(ValidacionDNI).WithMessage("El DNI/CUIT ingresado es incorrecto.").WithErrorCode("0001");
@@ -37,9 +37,9 @@ namespace WebWorldPizza.Validators
                 RuleFor(p => p.apellido_nombre).NotEmpty().WithMessage("El nombre y apellido es obligatorio.").WithErrorCode("0001");
                 RuleFor(p => p.nro_telefono).NotEmpty().WithMessage("El nro de telefono es obligatorio.").WithErrorCode("0001");
                 RuleFor(p => p.domicilio).NotEmpty().WithMessage("La direccion es obligatoria.").WithErrorCode("0001");
-                RuleFor(p => p.usuario_abm).Cascade(CascadeMode.StopOnFirstFailure)
-                                   .NotEmpty().WithMessage("El usuario es obligatorio.").WithErrorCode("0001")
-                                   .Must(CUsuario).WithMessage("El usuario ya existe.").WithErrorCode("0001");
+                //RuleFor(p => p.usuario_abm).Cascade(CascadeMode.StopOnFirstFailure)
+                //                   .NotEmpty().WithMessage("El usuario es obligatorio.").WithErrorCode("0001")
+                //                   .Must(CUsuario).WithMessage("El usuario ya existe.").WithErrorCode("0001");
                 RuleFor(p => p.dni).Cascade(CascadeMode.StopOnFirstFailure)
                                    .NotEmpty().WithMessage("El DNI/CUIT es obligatorio.").WithErrorCode("0001")
                                    .Must(ValidacionDNI).WithMessage("El DNI/CUIT ingresado es incorrecto.").WithErrorCode("0001");

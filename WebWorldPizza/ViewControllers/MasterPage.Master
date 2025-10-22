@@ -8,6 +8,23 @@
     <asp:ContentPlaceHolder ID="head" runat="server">
     </asp:ContentPlaceHolder>
 
+    <%-- Estilos --%>
+    <link href="/Content/Styles/Generales.css" rel="stylesheet" />
+    <link href="/Content/Styles/Modal.css" rel="stylesheet" />
+    <link href="/Content/Styles/Principal.css" rel="stylesheet" />
+    <link href="/Content/Styles/Masterpage.css" rel="stylesheet" />
+    <link href="/Content/Styles/Tabla.css" rel="stylesheet" />
+    <link href="/Content/Styles/Spinner.css" rel="stylesheet" />
+    <link href="/Content/Styles/Switch.css" rel="stylesheet" />
+    <link href="/Content/Styles/Formulario.css" rel="stylesheet" />
+    <link href="/Content/Styles/Multiselect.css" rel="stylesheet" />    
+    <link href="/Content/Styles/Buttons.css" rel="stylesheet" />
+    <link href="/Content/Styles/Alert.css" rel="stylesheet" />
+    <link href="/Content/Styles/Toast.css" rel="stylesheet" />
+    <link href="/Content/Styles/FormularioSmall.css" rel="stylesheet" />    
+    <link href="/Content/Styles/Notificaciones.css" rel="stylesheet" />
+
+
      <%-- Icons google --%>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@48,400,0,0" />
 
@@ -26,32 +43,6 @@
 
     <%-- moment.js --%>
     <script src="/Scripts/moment.min.js"></script>
-
-
-
-    <%-- Estilos --%>
-    <link href="/Content/Styles/Generales.css" rel="stylesheet" />
-    <link href="/Content/Styles/Modal.css" rel="stylesheet" />
-    <link href="/Content/Styles/Principal.css" rel="stylesheet" />
-    <link href="/Content/Styles/Masterpage.css" rel="stylesheet" />
-    <link href="/Content/Styles/Tabla.css" rel="stylesheet" />
-    
-    <%--<link href="/Content/style/Errores.css" rel="stylesheet" />--%>
-   
-    <link href="/Content/Styles/Spinner.css" rel="stylesheet" />
-    <link href="/Content/Styles/Switch.css" rel="stylesheet" />
-    <%--<link href="/Content/style/Pestanas.css" rel="stylesheet" />--%>
-    <link href="/Content/Styles/Formulario.css" rel="stylesheet" />
-    <link href="/Content/Styles/Multiselect.css" rel="stylesheet" />
-    
-    <link href="/Content/Styles/Buttons.css" rel="stylesheet" />
-    <link href="/Content/Styles/Alert.css" rel="stylesheet" />
-    <link href="/Content/Styles/Toast.css" rel="stylesheet" />
-    <link href="/Content/Styles/FormularioSmall.css" rel="stylesheet" />
-    
-    <link href="/Content/Styles/Notificaciones.css" rel="stylesheet" />
-
-   
 
 </head>
 

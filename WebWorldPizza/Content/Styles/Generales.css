@@ -508,3 +508,15 @@ textarea:disabled {
     .btn-refresh:hover {
         color: var(--primary-color);
     }
+
+.link {
+    display: inline-block;
+    color: var(--main-color);
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: 500;
+}
+
+    .link:hover {
+        text-decoration: underline;
+    }

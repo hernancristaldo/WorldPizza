@@ -118,6 +118,10 @@ namespace WebWorldPizza
                         context.Response.Write(JsonConvert.SerializeObject(CTiposPagos()));
                         break;
 
+                    case "MPedido":
+                        context.Response.Write(JsonConvert.SerializeObject(MPedido(requestData)));
+                        break;
+
                     default:
                         throw new ArgumentException("Solicitud no válida");
                 }
@@ -195,6 +199,7 @@ namespace WebWorldPizza
             public List<Roles> roles { get; set; }
             public Usuarios usuario { get; set; }
             public UsuariosRoles usuarioRol { get; set; }
+            public Pedidos pedido { get; set; }
         }
 
         private bool IsAuthorized(HttpRequest request)
@@ -414,6 +419,11 @@ namespace WebWorldPizza
         private List<TiposPagos> CTiposPagos()
         {
             return metodo.CTiposPagos();
+        }
+
+        private Resultado MPedido(RequestData data)
+        {
+            return metodo.MPedido(data.pedido);
         }
 
         public bool IsReusable => false;

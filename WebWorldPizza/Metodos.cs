@@ -1844,5 +1844,114 @@ namespace WebWorldPizza
 
         #endregion ABMCUsuariosRoles
 
+        #region ABMCPedidos
+        public Resultado MPedido(Pedidos pedido)
+        {
+            // Se instancia la clase Resultado y se setea la variable en "Ok".
+            Resultado resultado = new Resultado() { resultado = "Ok" };
+
+            // Se instancia la clase Errores como una lista.
+            List<Errores> errores = new List<Errores>();
+
+            try
+            {
+                // Se abre sesion con la Base de Datos.
+                using (var session = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    // Se comienza transaccion.
+                    using (var transaction = session.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Se actualizan los datos del pedido.
+                            session.Update(pedido);
+
+                            // Se confirma transaccion.
+                            transaction.Commit();
+                        }
+                        // En caso de haber errores en la actualizacion de datos.
+                        catch
+                        {
+                            // Se vuelve atras la transaccion.
+                            transaction.Rollback();
+
+
+                            errores.Add(new Errores { cod_error = "0001", descripcion = "Error en la edicion del pedido." });
+
+                            // Se agrega el resultado a la lista de errores.
+                            resultado.errores = errores;
+
+                            // Se setea la variable del objeto indicando que hubo error.
+                            resultado.resultado = "Error";
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse con la base de datos." });               
+                resultado.errores = errores;                
+                resultado.resultado = "Error";
+            }
+            
+            return resultado;
+        }
+        #endregion ABMCPedidos
+
+        #region ABMCDetallesPedidos
+        public Resultado MDetallePedido(DetallesPedidos detallePedido)
+        {
+            // Se instancia la clase Resultado y se setea la variable en "Ok".
+            Resultado resultado = new Resultado() { resultado = "Ok" };
+
+            // Se instancia la clase Errores como una lista.
+            List<Errores> errores = new List<Errores>();
+
+            try
+            {
+                // Se abre sesion con la Base de Datos.
+                using (var session = NHibernateHelperDBWorldPizza.OpenSession())
+                {
+                    // Se comienza transaccion.
+                    using (var transaction = session.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Se actualizan los datos del pedido.
+                            session.Update(detallePedido);
+
+                            // Se confirma transaccion.
+                            transaction.Commit();
+                        }
+                        // En caso de haber errores en la actualizacion de datos.
+                        catch
+                        {
+                            // Se vuelve atras la transaccion.
+                            transaction.Rollback();
+
+
+                            errores.Add(new Errores { cod_error = "0001", descripcion = "Error en la edicion del detalle de pedido." });
+
+                            // Se agrega el resultado a la lista de errores.
+                            resultado.errores = errores;
+
+                            // Se setea la variable del objeto indicando que hubo error.
+                            resultado.resultado = "Error";
+                        }
+                    }
+                }
+            }
+            catch
+            {
+                // Se guarda el error.
+                errores.Add(new Errores { cod_error = "0001", descripcion = "Error al intentar conectarse con la base de datos." });
+                resultado.errores = errores;
+                resultado.resultado = "Error";
+            }
+
+            return resultado;
+        }
+        #endregion ABMCDetallesPedidos
     }
 }
