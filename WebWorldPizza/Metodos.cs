@@ -1855,6 +1855,8 @@ namespace WebWorldPizza
 
             try
             {
+                if (pedido.estado.id == 5) pedido.fecha_entrega = DateTime.Now;
+
                 // Se abre sesion con la Base de Datos.
                 using (var session = NHibernateHelperDBWorldPizza.OpenSession())
                 {

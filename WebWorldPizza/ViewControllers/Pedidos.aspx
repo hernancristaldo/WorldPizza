@@ -104,7 +104,46 @@
                     </div>
                 </div>
 
-                <button data-element="btnGuardar" type="button" class="custom-btn-guardar">Guardar cambios</button>
+                <button data-element="btnGuardar" type="button" class="custom-btn-guardar" style="display:none">Guardar cambios</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="bodyDetalles">
+        <div>
+            <div class="contenedor-generico">
+                <div class="contenedor-doble">
+                    <div class="contenedor-principal">                
+                        <div id="resetModalDetalles"></div>
+                    </div>
+                    <div class="contenedor-secundario">
+                        <div class="margin-10" style="display: flex; justify-content: flex-end" id="switchEdicionDetalles"></div>
+                    </div>
+                </div>
+                <div class="formulario-4">
+                     <div class="formulario__grupo">
+                        <label class="formbold-form-label">Codigo</label>
+                        <input id="codigoPedido" class="form-control" type="text" disabled />
+                    </div> 
+                    <div class="formulario__grupo">
+                        <label class="formbold-form-label">Cliente</label>
+                        <input id="clientePedido" class="form-control" type="text" disabled />
+                    </div> 
+                    <div class="formulario__grupo">
+                        <label class="formbold-form-label">Direccion</label>
+                        <input id="direccionPedido" class="form-control" type="text" disabled />
+                    </div> 
+                    <div class="formulario__grupo">
+                        <label class="formbold-form-label">Importe</label>
+                        <input id="importePedido" class="form-control" type="text" disabled />
+                    </div>
+                </div>
+                <br />
+                 <div id="spinnerDetalles">
+                    <div id="tablaDetalles"></div>
+                </div>  
+
+                <button data-element="btnGuardar" class="custom-btn-guardar" type="button" style="display:none">Guardar cambios</button>
             </div>
         </div>
     </template>

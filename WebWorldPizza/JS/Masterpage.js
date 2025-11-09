@@ -35,7 +35,7 @@ class Nav {
 
         if (sessionUser.usuario.resultado === "Ok") this.empleado = sessionUser.usuario.empleado;
         
-        document.querySelector("#user").innerHTML = this.empleado.usuario_abm;
+        document.querySelector("#user").innerHTML = sessionUser.usuario.usuario;
 
         // Metodo para obtener notificaciones periodicamente.
         //this.iniciarIntervaloNotificaciones(this.empleado);

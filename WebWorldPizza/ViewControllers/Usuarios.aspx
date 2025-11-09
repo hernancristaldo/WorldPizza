@@ -36,8 +36,7 @@
     </template>
 
     <template id="bodyEdicion">
-        <div>       
-                        
+        <div>    
             <div class="titulo-generico">Detalle</div>
             <div class="contenedor-generico">
                 <div class="contenedor-doble">

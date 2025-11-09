@@ -162,12 +162,14 @@
     <Content Include="Images\logo.png" />
     <Content Include="js\Empleados.js" />
     <Content Include="js\Home.js" />
+    <Content Include="js\Listados.js" />
     <Content Include="js\ModuloPedidos.js" />
     <Content Include="js\Pedidos.js" />
     <Content Include="js\Productos.js" />
     <Content Include="js\Usuarios.js" />
     <Content Include="js\Utilidades\Cry.js" />
     <Content Include="js\Utilidades\Multiselect.js" />
+    <Content Include="js\Utilidades\Tabla2.js" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.MenusRoles.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.Usuarios.datasource" />
     <Content Include="Properties\DataSources\WSWorldPizza.Models.UsuariosRoles.datasource" />
@@ -218,6 +220,7 @@
     <Content Include="Test.aspx" />
     <Content Include="ViewControllers\Empleados.aspx" />
     <Content Include="ViewControllers\Home.aspx" />
+    <Content Include="ViewControllers\Listados.aspx" />
     <Content Include="ViewControllers\Login.aspx" />
     <Content Include="ViewControllers\Pedidos.aspx" />
     <Content Include="ViewControllers\Productos.aspx" />

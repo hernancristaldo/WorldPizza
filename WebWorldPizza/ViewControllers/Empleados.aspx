@@ -71,11 +71,6 @@
                         <label class="formbold-form-label">Mail</label>
                         <input type="email" id="editMail" class="formbold-form-input" data-validate="mail" data-editable="true" value="@" disabled />                  
                     </div> 
-                    <%--<div class="formulario__grupo">
-                        <label class="formbold-form-label">User</label>
-                        <input type="text" id="editUsuario" class="formbold-form-input" data-validate="usuario_abm" data-editable="true" required disabled />                    
-                        <div class="individual-errores"></div>
-                    </div>--%>
                 </div>
                  
             </div>         
@@ -113,11 +108,6 @@
                         <label class="formbold-form-label">Mail</label>
                         <input type="email" id="mail" class="formbold-form-input" data-editable="true" value="@"/>                   
                     </div> 
-                    <%--<div class="formulario__grupo">
-                        <label class="formbold-form-label">User</label>
-                        <input type="text" id="usuario" class="formbold-form-input" data-validate="usuario_abm" data-editable="true" required/>                    
-                        <div class="individual-errores"></div>
-                    </div>--%>
                 </div>
                        
                 

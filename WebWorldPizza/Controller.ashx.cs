@@ -122,6 +122,12 @@ namespace WebWorldPizza
                         context.Response.Write(JsonConvert.SerializeObject(MPedido(requestData)));
                         break;
 
+                    case "MDetallePedido":
+                        context.Response.Write(JsonConvert.SerializeObject(MDetallePedido(requestData)));
+                        break;
+
+                    
+
                     default:
                         throw new ArgumentException("Solicitud no válida");
                 }
@@ -134,7 +140,7 @@ namespace WebWorldPizza
             {
                 HandleError(context, "Error", "Solicitud no válida", HttpStatusCode.BadRequest);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 HandleError(context, "Error", "Se produjo un error al procesar la solicitud", HttpStatusCode.InternalServerError);
             }
@@ -200,6 +206,7 @@ namespace WebWorldPizza
             public Usuarios usuario { get; set; }
             public UsuariosRoles usuarioRol { get; set; }
             public Pedidos pedido { get; set; }
+            public DetallesPedidos detallePedido { get; set; }
         }
 
         private bool IsAuthorized(HttpRequest request)
@@ -386,9 +393,14 @@ namespace WebWorldPizza
                     {
                         List<DetallesPedidos> detalles = metodo.CDetallesPedido(p.id);
 
-                        pedidoVM.pedido = p;
-                        pedidoVM.detalles = detalles;
-                        pedidoVM.resultado = "Ok";
+                        pedidoVM = new PedidosVM
+                        {
+                            pedido = p,
+                            detalles = detalles,
+                            resultado = "Ok"
+                        };
+
+                        
                         pedidosVM.Add(pedidoVM);
                     }
                 }
@@ -425,6 +437,13 @@ namespace WebWorldPizza
         {
             return metodo.MPedido(data.pedido);
         }
+
+        private Resultado MDetallePedido(RequestData data)
+        {
+            return metodo.MDetallePedido(data.detallePedido);
+        }
+
+        
 
         public bool IsReusable => false;
     }
