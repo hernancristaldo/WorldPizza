@@ -1,12 +1,8 @@
 ﻿import Principal from '/js/Utilidades/Principal.js';
 import InstanciaCry from '/js/Utilidades/Cry.js';
-import Spinner from '/js/Utilidades/Spinner.js';
 import AsyncFetch from '/js/Utilidades/Asyncfetch.js';
-import Tabla from '/js/Utilidades/Tabla.js';
-import Tabla2 from '/js/Utilidades/Tabla2.js';
 import Alert from '/js/Utilidades/Alert.js';
 import Toast from '/js/Utilidades/Toast.js';
-import Modal from '/js/Utilidades/Modal.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     new ListadosIndex();
@@ -198,6 +194,10 @@ class ListadosIndex {
 
             if (elem === "btnExcel") {
                 this.generarExcel();
+            }
+
+            if (elem === "btnPDF") {
+                this.generarPDF();
             }
 
             return;
@@ -514,44 +514,69 @@ class ListadosIndex {
 
         if (array.length === 0) {
             document.querySelector('[data-element="btnExcel"]').style.display = 'none';
+            document.querySelector('[data-element="btnPDF"]').style.display = 'none';
             new Toast({ mensaje: "No hay resultados para su busqueda.", type: "error" });
         }
         else {
             document.querySelector('[data-element="btnExcel"]').style.display = 'block';
+            document.querySelector('[data-element="btnPDF"]').style.display = 'block';
             this.pedidosFiltrados = JSON.parse(JSON.stringify(array));
         }
 
         this.principal.ocultarSpinner();
     }
     generarExcel() {
-        console.log(this.pedidosFiltrados);
-
-
+        
         try {
 
             const fechaActual = new Date();
-            //const desdeFecha = this.filtro.desdeFecha === "" ? " - " : moment(desdeFecha).format('DD/MM/YYYY');
-            //const hastaFecha = this.filtro.hastaFecha === "" ? " - " : moment(hastaFecha).format('DD/MM/YYYY');
+            let ws_data;
 
+            const tipoFiltro = document.querySelector("#tipoFiltro option:checked").text;
+            const id_tipoFiltro = parseInt(document.querySelector("#tipoFiltro").value);
+            let cantProductos = 0;
 
-            // Convertir los datos a un formato compatible con SheetJS
-            const ws_data = [
-                ['Listado de Pedidos'],
-                [`Fecha emision: ${moment(fechaActual).format('DD/MM/YYYY')}`],
-                //[`Filtrado desde fecha: ${desdeFecha}`],
-                //[`Filtrado hasta fecha: ${hastaFecha}`],
-                //[`Motivo: ${this.filtro.motivo}`],
-                //[`Estado: ${this.filtro.estado}`],
-                //[`Estado Revision: ${this.filtro.estadoRevision}`],
-                //[`Listado por: ${this.filtro.tipoListado}`],
-                [], // Línea vacía para separación
-                ['Cod', 'Cliente', 'Direccion', 'Barrio', 'Pagado', 'Tipo Pago', 'Estado', 'Fecha Alta', 'Fecha Entrega', 'Rol', 'Importe', 'Repartidor'],
-                ...this.pedidosFiltrados.map(item => [item.pedido.id, item.pedido.nombre_cliente, item.pedido.direccion, item.pedido.barrio, item.pedido.pagado === true ? 'Si' : 'No',
+            if (id_tipoFiltro === 1) {
+
+                const id_producto = parseInt(document.querySelector("#selectProducto").value);
+                const producto = document.querySelector("#selectProducto option:checked").text;
+
+                this.pedidosFiltrados.forEach(elem => {
+                    elem.detalles.forEach(det => {
+                        if (det.producto.id === id_producto) cantProductos += det.cantidad;
+                    });
+                });
+
+                ws_data = [
+                    ['Listado de Pedidos'],
+                    [`Fecha emision: ${moment(fechaActual).format('DD/MM/YYYY')}`],
+                    [`Filtrado por: ${tipoFiltro} - ${producto}`],
+                    [`Cantidad de pedidos: ${this.pedidosFiltrados.length}`],
+                    [`Cantidad de productos: ${cantProductos}`],
+                    [], // Línea vacía para separación
+                    ['Cod', 'Cliente', 'Direccion', 'Barrio', 'Pagado', 'Tipo Pago', 'Estado', 'Fecha Alta', 'Fecha Entrega', 'Asignado a', 'Importe', 'Repartidor'],
+                    ...this.pedidosFiltrados.map(item => [item.pedido.id, item.pedido.nombre_cliente, item.pedido.direccion, item.pedido.barrio, item.pedido.pagado === true ? 'Si' : 'No',
                     item.pedido.tipoPago.nombre, item.pedido.estado.nombre,
                     moment(item.pedido.fecha_alta).format('DD/MM/YYYY'),
                     item.pedido.fecha_entrega !== null ? moment(item.pedido.fecha_entrega).format('DD/MM/YYYY') : ' - ',
                     item.pedido.rol.nombre, item.pedido.importe, item.pedido.repartidor !== null ? item.pedido.repartidor.usuario : " - "])];
+            }
+            else {
 
+                ws_data = [
+                    ['Listado de Pedidos'],
+                    [`Fecha emision: ${moment(fechaActual).format('DD/MM/YYYY')}`],
+                    [`Filtrado por: ${tipoFiltro}`],                    
+                    [`Cantidad de pedidos: ${this.pedidosFiltrados.length}`],
+                    [], // Línea vacía para separación
+                    ['Cod', 'Cliente', 'Direccion', 'Barrio', 'Pagado', 'Tipo Pago', 'Estado', 'Fecha Alta', 'Fecha Entrega', 'Asignado a', 'Importe', 'Repartidor'],
+                    ...this.pedidosFiltrados.map(item => [item.pedido.id, item.pedido.nombre_cliente, item.pedido.direccion, item.pedido.barrio, item.pedido.pagado === true ? 'Si' : 'No',
+                    item.pedido.tipoPago.nombre, item.pedido.estado.nombre,
+                    moment(item.pedido.fecha_alta).format('DD/MM/YYYY'),
+                    item.pedido.fecha_entrega !== null ? moment(item.pedido.fecha_entrega).format('DD/MM/YYYY') : ' - ',
+                    item.pedido.rol.nombre, item.pedido.importe, item.pedido.repartidor !== null ? item.pedido.repartidor.usuario : " - "])];
+            }
+            
 
             // Se crea un nuevo libro de trabajo (workbook) y una hoja de trabajo (worksheet)
             const wb = XLSX.utils.book_new();
@@ -591,4 +616,102 @@ class ListadosIndex {
             new Alert({ mensaje: "Error al generar el archivo.", title: "Error", type: "error" });
         }
     }
+    generarPDF() {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('l', 'pt', 'a4'); // orientación landscape (horizontal)
+            const fechaActual = new Date();
+
+            const tipoFiltro = document.querySelector("#tipoFiltro option:checked").text;
+            const id_tipoFiltro = parseInt(document.querySelector("#tipoFiltro").value);
+            let cantProductos = 0;
+
+            let titulo = "Listado de Pedidos";
+            let subtitulos = [];
+            let columnas = ['Cod', 'Cliente', 'Direccion', 'Barrio', 'Pagado', 'Tipo Pago', 'Estado', 'Fecha Alta', 'Fecha Entrega', 'Asignado a', 'Importe', 'Repartidor'];
+            let filas = [];
+
+            if (id_tipoFiltro === 1) {
+                const id_producto = parseInt(document.querySelector("#selectProducto").value);
+                const producto = document.querySelector("#selectProducto option:checked").text;
+
+                this.pedidosFiltrados.forEach(elem => {
+                    elem.detalles.forEach(det => {
+                        if (det.producto.id === id_producto) cantProductos += det.cantidad;
+                    });
+                });
+
+                subtitulos = [
+                    `Fecha emisión: ${moment(fechaActual).format('DD/MM/YYYY')}`,
+                    `Filtrado por: ${tipoFiltro} - ${producto}`,
+                    `Cantidad de pedidos: ${this.pedidosFiltrados.length}`,
+                    `Cantidad de productos: ${cantProductos}`
+                ];
+            } else {
+                subtitulos = [
+                    `Fecha emisión: ${moment(fechaActual).format('DD/MM/YYYY')}`,
+                    `Filtrado por: ${tipoFiltro}`,
+                    `Cantidad de pedidos: ${this.pedidosFiltrados.length}`
+                ];
+            }
+
+            // Construcción de filas
+            filas = this.pedidosFiltrados.map(item => [
+                item.pedido.id,
+                item.pedido.nombre_cliente,
+                item.pedido.direccion,
+                item.pedido.barrio,
+                item.pedido.pagado === true ? 'Sí' : 'No',
+                item.pedido.tipoPago.nombre,
+                item.pedido.estado.nombre,
+                moment(item.pedido.fecha_alta).format('DD/MM/YYYY'),
+                item.pedido.fecha_entrega !== null ? moment(item.pedido.fecha_entrega).format('DD/MM/YYYY') : ' - ',
+                item.pedido.rol.nombre,
+                item.pedido.importe,
+                item.pedido.repartidor !== null ? item.pedido.repartidor.usuario : " - "
+            ]);
+
+            // ====== ENCABEZADO ======
+            doc.setFontSize(16);
+            doc.text(titulo, 40, 40);
+            doc.setFontSize(11);
+
+            let y = 60;
+            subtitulos.forEach(linea => {
+                doc.text(linea, 40, y);
+                y += 15;
+            });
+
+            // ====== TABLA ======
+            doc.autoTable({
+                startY: y + 10,
+                head: [columnas],
+                body: filas,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [41, 128, 185],
+                    textColor: 255,
+                    fontStyle: 'bold'
+                },
+                styles: {
+                    fontSize: 9,
+                    cellPadding: 4,
+                    halign: 'center',
+                    valign: 'middle'
+                },
+                columnStyles: {
+                    1: { halign: 'left' },
+                    2: { halign: 'left' },
+                    3: { halign: 'left' }
+                }
+            });
+
+            // ====== DESCARGA ======
+            doc.save('ListadoPedidos.pdf');
+        } catch (error) {
+            console.error(error);
+            new Alert({ mensaje: "Error al generar el PDF.", title: "Error", type: "error" });
+        }
+    }
+
 }

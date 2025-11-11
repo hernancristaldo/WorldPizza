@@ -703,7 +703,7 @@ class EstadoPedido {
             estado: estado,
             rol: rol,
             fecha_alta: this.pedido.pedido.fecha_alta,
-            repartidor: rol.id === 4 ? repartidor : null
+            repartidor: rol.id === 4 ? repartidor : this.pedido.repartidor
         };
 
         const data = {
