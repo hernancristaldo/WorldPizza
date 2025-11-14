@@ -163,6 +163,7 @@
     <Content Include="js\Empleados.js" />
     <Content Include="js\Home.js" />
     <Content Include="js\Listados.js" />
+    <Content Include="js\Mapa.js" />
     <Content Include="js\ModuloPedidos.js" />
     <Content Include="js\Pedidos.js" />
     <Content Include="js\Productos.js" />
@@ -222,6 +223,7 @@
     <Content Include="ViewControllers\Home.aspx" />
     <Content Include="ViewControllers\Listados.aspx" />
     <Content Include="ViewControllers\Login.aspx" />
+    <Content Include="ViewControllers\Mapa.aspx" />
     <Content Include="ViewControllers\Pedidos.aspx" />
     <Content Include="ViewControllers\Productos.aspx" />
     <Content Include="ViewControllers\Usuarios.aspx" />
