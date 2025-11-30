@@ -51,7 +51,7 @@ class ListadosIndex {
         this.productos = await this.getProductos(); // Productos
 
         
-        this.seteoFiltro("0");
+        this.seteoFiltro("8");
         this.principal.ocultarSpinner();
     }
     eventos() {
@@ -403,6 +403,10 @@ class ListadosIndex {
 
             this.llenarRoles();
         }
+        else if (filtro === "8") {
+            document.querySelector("#grupo1").style.display = 'none';
+            document.querySelector("#grupo2").style.display = 'none';
+        }
     }
     busqueda() {
 
@@ -501,7 +505,7 @@ class ListadosIndex {
                 array = array.filter(p => p.pedido.nombre_cliente.toUpperCase().includes(cliente));
             }
         }
-        else {
+        else if (tipoFiltro === "7") {
 
             const id_rol = parseInt(document.querySelector("#selectRoles").value);
 
@@ -510,6 +514,57 @@ class ListadosIndex {
             }
         }
 
+
+        const desdeFecha = document.querySelector("#desdeFecha").value;
+        const hastaFecha = document.querySelector("#hastaFecha").value;
+
+        // Si no hay ninguna fecha → no se aplica filtro
+        if (desdeFecha === "" && hastaFecha === "") {
+            // No filtrar nada
+        }
+        else {
+
+            if (desdeFecha !== "" && hastaFecha !== "") {
+                const desde = new Date(desdeFecha);
+                const hasta = new Date(hastaFecha);
+
+                if (hasta < desde) {
+                    new Toast({ mensaje: "La segunda fecha es anterior a la primer fecha.", type: "error" });
+                    this.principal.ocultarSpinner();
+                    return;
+                }               
+            }
+
+            // Fecha base del pedido
+            array = array.filter(p => {
+                const fechaPedido = new Date(p.pedido.fecha_alta);
+
+                // CASO 1: solo hastaFecha → pedidos hasta esa fecha
+                if (desdeFecha === "" && hastaFecha !== "") {
+                    const hasta = new Date(hastaFecha);
+                    return fechaPedido <= hasta;
+                }
+
+                // CASO 2: solo desdeFecha → pedidos desde esa fecha hasta hoy
+                if (desdeFecha !== "" && hastaFecha === "") {
+                    const desde = new Date(desdeFecha);
+                    const hoy = new Date(); // fecha actual
+                    return fechaPedido >= desde && fechaPedido <= hoy;
+                }
+
+                // CASO 3: ambas fechas cargadas → validar y filtrar entre ambas
+                if (desdeFecha !== "" && hastaFecha !== "") {
+                    const desde = new Date(desdeFecha);
+                    const hasta = new Date(hastaFecha);
+
+                    
+
+                    return fechaPedido >= desde && fechaPedido <= hasta;
+                }
+
+                return true;
+            });
+        }
         
 
         if (array.length === 0) {
@@ -534,6 +589,8 @@ class ListadosIndex {
 
             const tipoFiltro = document.querySelector("#tipoFiltro option:checked").text;
             const id_tipoFiltro = parseInt(document.querySelector("#tipoFiltro").value);
+            const desdeFecha = document.querySelector("#desdeFecha").value;
+            const hastaFecha = document.querySelector("#hastaFecha").value;
             let cantProductos = 0;
 
             if (id_tipoFiltro === 1) {
@@ -551,6 +608,7 @@ class ListadosIndex {
                     ['Listado de Pedidos'],
                     [`Fecha emision: ${moment(fechaActual).format('DD/MM/YYYY')}`],
                     [`Filtrado por: ${tipoFiltro} - ${producto}`],
+                    [`Desde fecha: ${desdeFecha === "" ? ' - ' : moment(desdeFecha).format('DD/MM/YYYY')}    Hasta fecha: ${hastaFecha === "" ? ' - ' : moment(hastaFecha).format('DD/MM/YYYY')}`],
                     [`Cantidad de pedidos: ${this.pedidosFiltrados.length}`],
                     [`Cantidad de productos: ${cantProductos}`],
                     [], // Línea vacía para separación
@@ -566,7 +624,8 @@ class ListadosIndex {
                 ws_data = [
                     ['Listado de Pedidos'],
                     [`Fecha emision: ${moment(fechaActual).format('DD/MM/YYYY')}`],
-                    [`Filtrado por: ${tipoFiltro}`],                    
+                    [`Filtrado por: ${tipoFiltro}`],
+                    [`Desde fecha: ${desdeFecha === "" ? ' - ' : moment(desdeFecha).format('DD/MM/YYYY')}    Hasta fecha: ${hastaFecha === "" ? ' - ' : moment(hastaFecha).format('DD/MM/YYYY')}`],
                     [`Cantidad de pedidos: ${this.pedidosFiltrados.length}`],
                     [], // Línea vacía para separación
                     ['Cod', 'Cliente', 'Direccion', 'Barrio', 'Pagado', 'Tipo Pago', 'Estado', 'Fecha Alta', 'Fecha Entrega', 'Asignado a', 'Importe', 'Repartidor'],
@@ -624,6 +683,8 @@ class ListadosIndex {
 
             const tipoFiltro = document.querySelector("#tipoFiltro option:checked").text;
             const id_tipoFiltro = parseInt(document.querySelector("#tipoFiltro").value);
+            const desdeFecha = document.querySelector("#desdeFecha").value;
+            const hastaFecha = document.querySelector("#hastaFecha").value;
             let cantProductos = 0;
 
             let titulo = "Listado de Pedidos";
@@ -644,6 +705,7 @@ class ListadosIndex {
                 subtitulos = [
                     `Fecha emisión: ${moment(fechaActual).format('DD/MM/YYYY')}`,
                     `Filtrado por: ${tipoFiltro} - ${producto}`,
+                    `Desde fecha: ${desdeFecha === "" ? ' - ' : moment(desdeFecha).format('DD/MM/YYYY')}    Hasta fecha: ${hastaFecha === "" ? ' - ' : moment(hastaFecha).format('DD/MM/YYYY')}`,
                     `Cantidad de pedidos: ${this.pedidosFiltrados.length}`,
                     `Cantidad de productos: ${cantProductos}`
                 ];
@@ -651,6 +713,7 @@ class ListadosIndex {
                 subtitulos = [
                     `Fecha emisión: ${moment(fechaActual).format('DD/MM/YYYY')}`,
                     `Filtrado por: ${tipoFiltro}`,
+                    `Desde fecha: ${desdeFecha === "" ? ' - ' : moment(desdeFecha).format('DD/MM/YYYY')}    Hasta fecha: ${hastaFecha === "" ? ' - ' : moment(hastaFecha).format('DD/MM/YYYY')}`,
                     `Cantidad de pedidos: ${this.pedidosFiltrados.length}`
                 ];
             }

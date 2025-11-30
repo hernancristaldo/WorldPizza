@@ -19,11 +19,12 @@
                     <div class="formulario__grupo">
                         <label class="formbold-form-label"> Filtrar por </label>
                         <select id="tipoFiltro" class="form-control">
+                            <option value="8">Todos</option>
                             <option value="0">Estado</option>
                             <option value="1">Producto</option>
                             <option value="2">Direccion</option>
                             <option value="3">Tipo Pago</option>
-                            <option value="4">Fecha</option>
+                            <%--<option value="4">Fecha</option>--%>
                             <option value="5">Importe</option>
                             <option value="6">Cliente</option>
                             <option value="7">Rol</option>
@@ -32,6 +33,16 @@
                     <div class="formulario__grupo" id="grupo1" style="display: none;">
                     </div>
                     <div class="formulario__grupo" id="grupo2" style="display: none;">
+                    </div>
+                </div>
+                <div class="formulario-2">
+                    <div class="formulario__grupo">
+                        <label class="formbold-form-label">Desde fecha</label>
+                        <input id="desdeFecha" class="form-control" type="date" />
+                    </div>
+                    <div class="formulario__grupo">
+                        <label class="formbold-form-label">Hasta fecha</label>
+                        <input id="hastaFecha" class="form-control" type="date" />
                     </div>
                 </div>
 

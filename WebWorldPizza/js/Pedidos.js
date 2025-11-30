@@ -34,6 +34,8 @@ class PedidosIndex {
             this.spinnerTabla.mostrarSpinner();
             this.busqueda();
 
+            
+
             return PedidosIndex.instance;
         }
 
@@ -116,7 +118,6 @@ class PedidosIndex {
         });
 
         if (response[0].resultado === "Ok") {
-
 
             return response;
         }
@@ -411,6 +412,7 @@ class PedidosIndex {
             const elem = e.target.dataset.action;
 
             if (elem === "verEstado") {
+                
                 new EstadoPedido(this.editar, this.sessionUser, pedido, this.roles, this.estados, this.tiposPagos);
                 return;
             }
@@ -447,7 +449,8 @@ class EstadoPedido {
         this.roles = roles;
         this.estados = estados;
         this.tiposPago = tiposPago;
-        this.repartidores = [];        
+        this.repartidores = [];
+
 
         this.main();
     }
@@ -611,8 +614,8 @@ class EstadoPedido {
                 selectRepartidores.appendChild(option);
 
                 if (this.pedido.pedido.repartidor !== null) {
-                    if (this.pedido.pedido.repartidor === usuario) {
-                        option.selected === true;
+                    if (this.pedido.pedido.repartidor.usuario === usuario) {
+                        option.selected = true;
                     }
                 }
             });
@@ -703,8 +706,8 @@ class EstadoPedido {
             estado: estado,
             rol: rol,
             fecha_alta: this.pedido.pedido.fecha_alta,
-            repartidor: rol.id === 4 ? repartidor : this.pedido.repartidor
-        };
+            repartidor: rol.id === 4 ? repartidor : this.pedido.pedido.repartidor
+        };       
 
         const data = {
             accion: "MPedido",
