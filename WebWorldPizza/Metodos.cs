@@ -311,7 +311,15 @@ namespace WebWorldPizza
                         var query = sessionDBGestionesMM.QueryOver(() => pe)
                                                         .Where(m => m.id != 0);
 
-                        if (filtroBusqueda != "") query.And(a => a.nombre_cliente.IsLike(usuario, MatchMode.Exact));
+                        if (!string.IsNullOrEmpty(filtroBusqueda))
+                        {
+                            query.And(
+                                Restrictions.Disjunction()
+                                    .Add(() => pe.nombre_cliente.IsLike(filtroBusqueda, MatchMode.Anywhere))
+                                    .Add(() => pe.direccion.IsLike(filtroBusqueda, MatchMode.Anywhere))
+                                    .Add(() => pe.barrio.IsLike(filtroBusqueda, MatchMode.Anywhere))
+                            );
+                        }
 
                         if (usuario != "") query.And(a => a.repartidor.usuario.IsLike(usuario, MatchMode.Exact));
 
@@ -905,7 +913,7 @@ namespace WebWorldPizza
                                 transaction.Commit();
                             }
                             // En caso de haber errores en la actualizacion de datos.
-                            catch
+                            catch(Exception ex)
                             {
                                 // Se vuelve atras la transaccion.
                                 transaction.Rollback();

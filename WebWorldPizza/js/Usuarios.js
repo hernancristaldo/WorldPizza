@@ -558,6 +558,7 @@ class EdicionUsuario {
             pass: document.querySelector("#editPass").value
         };
 
+
         const data = {
             accion: "MUsuario",
             usuario: obj
@@ -610,8 +611,9 @@ class EdicionUsuario {
             }
 
             // Se actualiza el usuario seleccionado.
-            const [us] = this.usuarios.filter(e => e.usuario === this.usuario.usuario);
+            const [us] = this.usuarios.filter(e => e.usuario === data.usuario.usuario);
             this.usuario = us;
+
         }
 
         return;

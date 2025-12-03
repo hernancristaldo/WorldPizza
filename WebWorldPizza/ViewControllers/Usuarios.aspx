@@ -54,7 +54,7 @@
                     </div>
                     <div class="formulario__grupo">
                         <label class="formbold-form-label">Usuario</label>
-                        <input type="text" id="editUsuario" class="formbold-form-input" data-validate="usuario" data-editable="true" required disabled />   
+                        <input type="text" id="editUsuario" class="formbold-form-input" data-validate="usuario" required disabled />   
                         <div class="individual-errores"></div>
                     </div>                    
                     <div class="formulario__grupo">

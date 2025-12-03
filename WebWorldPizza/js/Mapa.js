@@ -129,14 +129,15 @@ class Mapa {
 
         if (response[0].resultado === "Ok") {                       
 
-            const hoy = new Date();
+            const hoy = new Date();            
 
             response = response.filter(p => {
-                const fechaPedido = new Date(p.pedido.fecha_alta);
+                const fechaPedido = new Date(p.pedido.fecha_alta.replace(" ", "T"));
 
-                return fechaPedido === hoy;
+                return fechaPedido.getFullYear() === hoy.getFullYear()
+                    && fechaPedido.getMonth() === hoy.getMonth()
+                    && fechaPedido.getDate() === hoy.getDate();
             });
-
 
             return response;
         }
